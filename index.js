@@ -14,14 +14,14 @@ app.post('/',urlencodedParser,function(req,res){
 
 
 
-  if(!req.body) res.send(400);
+  if(!req.body) res.sendStatus(400);
   console.log("hahaha success!");
   console.log(req.body);
 
   res.header("Access-Control-Allow-Origin", "*");
   
   
-  res.send("成功！");
+  res.sendStatus(200);
 })
 
 
