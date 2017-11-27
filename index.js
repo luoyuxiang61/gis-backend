@@ -25,11 +25,5 @@ app.post('/',urlencodedParser,function(req,res){
 })
 
 
-app.put('/api',function(){
-
-  res.header("Access-Control-Allow-Origin", "*");
-  res.send("111111");
-  console.log("hhhhhh");
-})
 
 app.listen(3000);
