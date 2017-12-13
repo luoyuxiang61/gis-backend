@@ -16,6 +16,7 @@ const sequelize = new Sequelize('ContractManagement', 'sa', 'Luoyuxiang61.', {
     }
 });
 const { gt, lte, ne, in: opIn } = Sequelize.Op;
+const Op = Sequelize.Op;
 
 
 sequelize
@@ -154,6 +155,20 @@ const RecordOfPayment = sequelize.define('RecordOfPayment',{
 
 
 
+// Contract.update({ProjectName:"太湖新城一个工程一个工程一个工程"},{
+//     where:{
+//         id:{
+//             [gt]:0
+//         }
+//     }
+// })
+
+
+
+
+
+
+
 
 
 
@@ -170,6 +185,8 @@ app.get("/contracts",urlencodedParser,function(req,res){
     Contract.findAll().then(results => {    
         for(var i=0;i<results.length;i++){
             contracts[i] = results[i].dataValues;
+            contracts[i].SGDWID = "苏州市某施工单位";
+            contracts[i].JSDWID = "苏州市一个感觉还可以的建设单位";
         }
         res.send(contracts)
     })
