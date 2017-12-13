@@ -1,5 +1,8 @@
-
-
+const express = require('express')
+var app = express()
+const bodyParser = require('body-parser')
+var jsonParser = bodyParser.json()
+var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
 const Sequelize = require('sequelize');
 const sequelize = new Sequelize('ContractManagement', 'sa', 'Luoyuxiang61.', {
@@ -154,6 +157,31 @@ const RecordOfPayment = sequelize.define('RecordOfPayment',{
 
 
 
+
+
+
+
+
+app.get("/contracts",urlencodedParser,function(req,res){
+    res.header("Access-Control-Allow-Origin", "*");
+
+    
+    var contracts = [];
+    Contract.findAll().then(results => {    
+        for(var i=0;i<results.length;i++){
+            contracts[i] = results[i].dataValues;
+        }
+        res.send(contracts)
+    })
+})
+
+app.listen(3000)
+
+
+
+
+
+
 // for(var i = 0;i<100;i++){
 //     Contract.create({
 //         SGDWID:i,
@@ -180,14 +208,6 @@ const RecordOfPayment = sequelize.define('RecordOfPayment',{
 // }
 
 
-
-
-// JSDW.findAll().then(users => {
-    
-//     for(var i=0;i<users.length;i++){
-//         console.log(users[i].dataValues)
-//     }
-// })
 
 
 
