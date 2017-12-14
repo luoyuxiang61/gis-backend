@@ -184,9 +184,16 @@ app.get("/contracts",urlencodedParser,function(req,res){
     var contracts = [];
     Contract.findAll().then(results => {    
         for(var i=0;i<results.length;i++){
+
             contracts[i] = results[i].dataValues;
-            contracts[i].SGDWID = "苏州市某施工单位";
-            contracts[i].JSDWID = "苏州市一个感觉还可以的建设单位";
+            contracts[i].SGDWID = "苏州市某个某个某个施工单位";
+            contracts[i].JSDWID = "苏州市一个一个一个一个建设单位";
+            contracts[i].ProjectName = "苏州轨道交通四号线支线溪霞路站配套地下空间1、2号出入口坡道及友翔路综合管廊K1+185~K1+360段基坑围护设计";
+            if (i < 50) {
+                contracts[i].JSDWID = "苏州市一个一个一个一个建设单位苏州市一个一个一个一个建设单位苏州市一个一个一个一个建设单位";
+            }
+            
+            contracts[i].ContractNO = "H044(G17-239)";
         }
         res.send(contracts)
     })
