@@ -239,10 +239,26 @@ const RecordOfPayment = sequelize.define('RecordOfPayment', {
 
 co(function* () {
 
-    yield sequelize.sync({ force: true });
+    // yield sequelize.sync({ force: true });
+
+    var jsdw = yield JSDW.create({
+        Name: "建设单位2号",
+        Adress: "高新区111号"
+    })
+
+    var sgdw = yield SGDW.create({
+        Name: "施工单位2号",
+        Adress: "高新区222号"
+    })
+
+    var js = yield JSDW.findById(2);
+    var sg = yield SGDW.findById(2);
+
+
+
 
     var con = yield Contract.create({
-        ProjectName:"工程2",
+        ProjectName:"工程x",
         Sign_Date:new Date(),
         ContractNO:"G117-9090",
         ContractAmount:213.2343,
@@ -257,15 +273,9 @@ co(function* () {
         Status:"进行中"
     })
 
-    var jsdw = yield con.createJSDW({
-        Name:"建设单位1号",
-        Adress:"高新区111号"
-    })
+    con.setJSDW(js);
+    con.setSGDW(sg);
 
-    var sgdw = yield con.createSGDW({
-        Name:"施工单位1号",
-        Adress:"高新区222号"
-    })
 
 
 }).catch(function (e) {
