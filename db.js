@@ -13,10 +13,14 @@ const sequelize = new Sequelize('Contract', 'sa', 'Luoyuxiang61.', {
         min: 0,
         acquire: 30000,
         idle: 10000
-    }
+    },
+    timezone: '+08:00'
 });
 const { gt, lte, ne, in: opIn } = Sequelize.Op;
 const Op = Sequelize.Op;
+
+var co = require('co')
+
 
 
 sequelize
@@ -176,6 +180,10 @@ const Contract = sequelize.define('Contract', {
         paranoid:true
     })
 
+JSDW.hasMany(Contract);
+SGDW.hasMany(Contract);
+Contract.belongsTo(JSDW);
+Contract.belongsTo(SGDW);
 
 
 
@@ -227,85 +235,45 @@ const RecordOfPayment = sequelize.define('RecordOfPayment', {
 
 
 
-sequelize.sync({force:true}).then(() => {
-    console.log("艰苦成功")
-})
 
 
+co(function* () {
+
+    yield sequelize.sync({ force: true });
+
+    var con = yield Contract.create({
+        ProjectName:"工程2",
+        Sign_Date:new Date(),
+        ContractNO:"G117-9090",
+        ContractAmount:213.2343,
+        AmountPaid:34.653,
+        Remark:"备注xxx",
+        Operator:"经办人",
+        WayOfEntrusting:"上会直接委托",
+        RelatedMaterials:"合同预审表，吴太办纪（2017）9号",
+        ContractType:"G类型合同",
+        Create_User:"用户",
+        Modify_User:'用户',
+        Status:"进行中"
+    })
+
+    var jsdw = yield con.createJSDW({
+        Name:"建设单位1号",
+        Adress:"高新区111号"
+    })
+
+    var sgdw = yield con.createSGDW({
+        Name:"施工单位1号",
+        Adress:"高新区222号"
+    })
 
 
-// Contract.update({ProjectName:"太湖新城一个工程一个工程一个工程"},{
-//     where:{
-//         id:{
-//             [gt]:0
-//         }
-//     }
-// })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// app.get("/contracts", urlencodedParser, function (req, res) {
-//     res.header("Access-Control-Allow-Origin", "*");
-
-
-//     var contracts = [];
-//     Contract.findAll().then(results => {
-//         for (var i = 0; i < results.length; i++) {
-
-//             contracts[i] = results[i].dataValues;
-//             contracts[i].SGDWID = "苏州市某个某个某个施工单位";
-//             contracts[i].JSDWID = "苏州市一个一个一个一个建设单位";
-//             contracts[i].ProjectName = "苏州轨道交通四号线支线溪霞路站配套地下空间1、2号出入口坡道及友翔路综合管廊K1+185~K1+360段基坑围护设计";
-//             if (i < 50) {
-//                 contracts[i].JSDWID = "苏州市一个一个一个一个建设单位苏州市一个一个一个一个建设单位苏州市一个一个一个一个建设单位";
-//             }
-
-//             contracts[i].ContractNO = "H044(G17-239)";
-//         }
-//         res.send(contracts)
-//     })
-// })
-
-// app.listen(3000)
+}).catch(function (e) {
+    console.log(e);
+});
 
 
 
 
 
 
-// for(var i = 0;i<100;i++){
-//     Contract.create({
-//         SGDWID:i,
-//         ProjectName:"工程"+i,
-//         JSDWID:i,
-//         Sign_Date:new Date(),
-//         ContractNO:"合同编号"+i,
-//         ContractAmount:213.2343+i*33.7,
-//         AmountPaid:34.653+i*22.6,
-//         Remark:"备注xxx",
-//         Operator:"经办人"+i,
-//         WayOfEntrusting:"上会直接委托",
-//         RelatedMaterials:"合同预审表，吴太办纪（2017）9号",
-//         ContractType:"G类型合同",
-//         Start_Date:new Date(),
-//         End_Date:new Date(),
-//         Create_Date:new Date(),
-//         Create_User:"用户"+i,
-//         Modify_Date:new Date(),
-//         Modify_User:"用户"+i,
-//         DeleteFlag:0,
-//         Status:"进行中"
-//     })
-// }
