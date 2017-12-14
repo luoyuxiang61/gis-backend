@@ -241,55 +241,49 @@ co(function* () {
 
     // yield sequelize.sync({ force: true });
 
-
-
-
-
-    // var con = yield Contract.create({
-    //     ProjectName:"工程x",
-    //     Sign_Date:new Date(),
-    //     ContractNO:"G117-9090",
-    //     ContractAmount:213.2343,
-    //     AmountPaid:34.653,
-    //     Remark:"备注xxx",
-    //     Operator:"经办人",
-    //     WayOfEntrusting:"上会直接委托",
-    //     RelatedMaterials:"合同预审表，吴太办纪（2017）9号",
-    //     ContractType:"G类型合同",
-    //     Create_User:"用户",
-    //     Modify_User:'用户',
-    //     Status:"进行中"
+    
+    //查到一个合同再修改它的施工单位
+    // var con = yield Contract.findByPrimary(1,{
+    //     include:[JSDW,SGDW]
     // })
+    // var sgdw = yield con.getSGDW();
+    // var jsdw = yield con.getJSDW();
+    // yield sgdw.update({ Name:"启迪设计集团股份有限公司（原名：苏州设计研究院股份有限公司）"})
+    // yield jsdw.update({ Name:"苏州吴中滨湖新城工程建设管理有限公司"})
 
+    var sgdw = yield SGDW.findById(1);
+    var jsdw = yield JSDW.findById(1);
 
+    for(var i=0;i<100;i++){
 
+        var statusx="完成";
+        if(i%2==0)status0="进行中";else if(i%3==0)status0="超时未完成";
 
-    var cons = yield Contract.findAll({
-        include:[SGDW,JSDW],
-        where:{
-            id:{
-                [gt]:0
-            }
-        }
-    })
-
-    var con = cons[0].get({plain:true});
-
-
-    console.log(con)
-    console.log(con.SGDW)
-    console.log(con.JSDW)
-    //
-
-
-
+        var con = yield Contract.create({
+            ProjectName: "苏州吴中太湖新城市政基础设施工程中一路（中六路~塔韵路）、中二路（中六路~塔韵路）、中六路（友翔路~中二路）、中八路（友翔路~中三路）施工图设计",
+            Sign_Date: new Date(2006, 0, 12),
+            ContractNO: "G13-176-1",
+            ContractAmount: 213.2343+i*34.5,
+            AmountPaid: 454.4523+i*44.321,
+            Remark: "这是一个备注xxxxx",
+            Operator: "经办人",
+            WayOfEntrusting: "上会直接委托",
+            RelatedMaterials: "合同预审表，吴太办纪（2017）9号",
+            ContractType: "G类型合同",
+            Create_User: "一个用户",
+            Modify_User: '一个用户',
+            Status: statusx
+        })
+        yield con.setSGDW(sgdw);
+        yield con.setJSDW(jsdw);
+    }
 }).catch(function (e) {
     console.log(e);
 });
 
 
 
-var d1 = new Date();
+
 
 
 
