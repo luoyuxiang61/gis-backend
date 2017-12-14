@@ -241,46 +241,55 @@ co(function* () {
 
     // yield sequelize.sync({ force: true });
 
-    var jsdw = yield JSDW.create({
-        Name: "建设单位2号",
-        Adress: "高新区111号"
+
+
+
+
+    // var con = yield Contract.create({
+    //     ProjectName:"工程x",
+    //     Sign_Date:new Date(),
+    //     ContractNO:"G117-9090",
+    //     ContractAmount:213.2343,
+    //     AmountPaid:34.653,
+    //     Remark:"备注xxx",
+    //     Operator:"经办人",
+    //     WayOfEntrusting:"上会直接委托",
+    //     RelatedMaterials:"合同预审表，吴太办纪（2017）9号",
+    //     ContractType:"G类型合同",
+    //     Create_User:"用户",
+    //     Modify_User:'用户',
+    //     Status:"进行中"
+    // })
+
+
+
+
+    var cons = yield Contract.findAll({
+        include:[SGDW,JSDW],
+        where:{
+            id:{
+                [gt]:0
+            }
+        }
     })
 
-    var sgdw = yield SGDW.create({
-        Name: "施工单位2号",
-        Adress: "高新区222号"
-    })
-
-    var js = yield JSDW.findById(2);
-    var sg = yield SGDW.findById(2);
+    var con = cons[0].get({plain:true});
 
 
-
-
-    var con = yield Contract.create({
-        ProjectName:"工程x",
-        Sign_Date:new Date(),
-        ContractNO:"G117-9090",
-        ContractAmount:213.2343,
-        AmountPaid:34.653,
-        Remark:"备注xxx",
-        Operator:"经办人",
-        WayOfEntrusting:"上会直接委托",
-        RelatedMaterials:"合同预审表，吴太办纪（2017）9号",
-        ContractType:"G类型合同",
-        Create_User:"用户",
-        Modify_User:'用户',
-        Status:"进行中"
-    })
-
-    con.setJSDW(js);
-    con.setSGDW(sg);
+    console.log(con)
+    console.log(con.SGDW)
+    console.log(con.JSDW)
+    //
 
 
 
 }).catch(function (e) {
     console.log(e);
 });
+
+
+
+var d1 = new Date();
 
 
 
