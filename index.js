@@ -252,9 +252,6 @@ const RecordOfPayment = sequelize.define('RecordOfPayment', {
 //         element.setSGDW(sgdw1);
 //     });
 
-
-
-
 // }).catch(function (e) {
 //     console.log(e);
 // });
@@ -328,66 +325,63 @@ function isEmptyObject(obj){
 app.post("/contracts", urlencodedParser, function (req, res){
     res.header("Access-Control-Allow-Origin", "*");
 
- 
-
     var keys = req.body;
 
 
     if (!isEmptyObject(keys)){
 
+        var sContractNO = keys.sContractNO;
+        var sProjectName = keys.sProjectName; 
         var sSGDW = keys.sSGDW;
-        var sProjectName = keys.sProjectName;
-        var sContractNO = keys.sContractNO;    
+        var sJSDW = keys.sJSDW;
+        var sStatus = keys.sStatus;   
 
 
         co(function* () {
             var cons = yield Contract.findAll({
-                include: [{
+                include: 
+                [{
                     model: SGDW,
                     where: {
                         Name: {
                             [Op.like]: "%" + sSGDW + "%"
                         }
                     }
-                }],
+                },
+                {
+                    model:JSDW,
+                    where:{
+                        Name:{
+                            [Op.like]: "%"+sJSDW+"%"
+                        }
+                    }
+                }
+                ],
                 where: {
+                    ContractNO: {
+                        [Op.like]:"%"+sContractNO+"%"
+                    },
                     ProjectName: {
                         [Op.like]: "%"+sProjectName+"%"
+                    },
+                    Status: {
+                        [Op.like]:"%"+sStatus+"%"
                     }
+
                 }
 
             })
 
+            var cs = [];
 
-            res.send(cons)
+            for (var i = 0; i < cons.length; i++) {
+                cs[i] = yield cons[i].get({ plain: true })
+            }
+            res.send(cs)
 
         }).catch(function (e) {
             console.log(e);
         });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     }else{
         co(function* () {
@@ -406,11 +400,7 @@ app.post("/contracts", urlencodedParser, function (req, res){
         }).catch(function (e) {
             console.log(e);
         });
-
-
-
     }
-
 })
 
 
