@@ -237,80 +237,179 @@ const RecordOfPayment = sequelize.define('RecordOfPayment', {
 
 
 
-co(function* () {
+// co(function* () {
+
+//     var sgdw1 = yield SGDW.findById(4);
+//     var cons = yield Contract.findAll({
+//         where:{
+//             id:{
+//                 [Op.lte]:209
+//             }
+//         }
+//     })
+
+//     cons.forEach(element => {
+//         element.setSGDW(sgdw1);
+//     });
 
 
 
 
-    var sgdw = yield SGDW.findById(1);
-    var jsdw = yield JSDW.findById(1);
+// }).catch(function (e) {
+//     console.log(e);
+// });
 
 
 
-    for(var i=0;i<150;i++){
-
-        var statusx="完成";
-        if(i%2==0)statusx="进行中";
-        if(i%3==0)statusx="超时未完成";
-        if(i%5==0)statusx="暂停";
-
-
-        var typex = "G";
-        if (i % 2 == 0)typex="H";
-        if (i % 5 == 0)typex="A";
 
 
 
-        var con = yield Contract.create({
-            ProjectName: "苏州吴中太湖新城市政基础设施工程中一路（中六路~塔韵路）、中二路（中六路~塔韵路）、中六路（友翔路~中二路）、中八路（友翔路~中三路）施工图设计",
-            Sign_Date: new Date(2006, 0, 12),
-            ContractNO: "G13-176-1",
-            ContractAmount: 454.2342+i*44.5,
-            AmountPaid: 254.4523+i*44.321,
-            Remark: "这是一个备注xxxxx",
-            Operator: "经办人",
-            WayOfEntrusting: "上会直接委托",
-            RelatedMaterials: "合同预审表，吴太办纪（2017）9号",
-            ContractType: typex,
-            Create_User: "一个用户",
-            Modify_User: '一个用户',
-            Status: statusx
-        })
-        yield con.setSGDW(sgdw);
-        yield con.setJSDW(jsdw);
+
+
+
+// co(function* () {
+
+
+
+
+//     var sgdw = yield SGDW.findById(1);
+//     var jsdw = yield JSDW.findById(1);
+
+
+
+//     for(var i=0;i<150;i++){
+
+//         var statusx="完成";
+//         if(i%2==0)statusx="进行中";
+//         if(i%3==0)statusx="超时未完成";
+//         if(i%5==0)statusx="暂停";
+
+
+//         var typex = "G";
+//         if (i % 2 == 0)typex="H";
+//         if (i % 5 == 0)typex="A";
+
+
+
+//         var con = yield Contract.create({
+//             ProjectName: "苏州吴中太湖新城市政基础设施工程中一路（中六路~塔韵路）、中二路（中六路~塔韵路）、中六路（友翔路~中二路）、中八路（友翔路~中三路）施工图设计",
+//             Sign_Date: new Date(2006, 0, 12),
+//             ContractNO: "G13-176-1",
+//             ContractAmount: 454.2342+i*44.5,
+//             AmountPaid: 254.4523+i*44.321,
+//             Remark: "这是一个备注xxxxx",
+//             Operator: "经办人",
+//             WayOfEntrusting: "上会直接委托",
+//             RelatedMaterials: "合同预审表，吴太办纪（2017）9号",
+//             ContractType: typex,
+//             Create_User: "一个用户",
+//             Modify_User: '一个用户',
+//             Status: statusx
+//         })
+//         yield con.setSGDW(sgdw);
+//         yield con.setJSDW(jsdw);
+//     }
+// }).catch(function (e) {
+//     console.log(e);
+// });
+
+
+
+function isEmptyObject(obj){
+    for(var key in obj){
+        return false;
     }
-}).catch(function (e) {
-    console.log(e);
-});
+    return true;
+}
 
 
 
 
-app.get("/contracts", urlencodedParser, function (req, res){
+app.post("/contracts", urlencodedParser, function (req, res){
     res.header("Access-Control-Allow-Origin", "*");
 
-    co(function* () {
-        
+ 
 
-        var cons = yield Contract.findAll({
-            include:[SGDW,JSDW]
+    var keys = req.body;
+
+
+    if (!isEmptyObject(keys)){
+
+        var sSGDW = keys.sSGDW;
+        var sProjectName = keys.sProjectName;
+        var sContractNO = keys.sContractNO;    
+
+
+        co(function* () {
+            var cons = yield Contract.findAll({
+                include: [{
+                    model: SGDW,
+                    where: {
+                        Name: {
+                            [Op.like]: "%" + sSGDW + "%"
+                        }
+                    }
+                }],
+                where: {
+                    ProjectName: {
+                        [Op.like]: "%"+sProjectName+"%"
+                    }
+                }
+
+            })
+
+
+            res.send(cons)
+
+        }).catch(function (e) {
+            console.log(e);
         });
-        
-        var cs = [];
-
-        for(var i=0;i<cons.length;i++){
-            cs[i] = yield cons[i].get({plain:true})
-        }
-
-        res.send(cs);
-    }).catch(function (e) {
-        console.log(e);
-    });
 
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    }else{
+        co(function* () {
+
+            var cons = yield Contract.findAll({
+                include: [SGDW, JSDW]
+            });
+
+            var cs = [];
+
+            for (var i = 0; i < cons.length; i++) {
+                cs[i] = yield cons[i].get({ plain: true })
+            }
+
+            res.send(cs);
+        }).catch(function (e) {
+            console.log(e);
+        });
+
+
+
+    }
 
 })
 
