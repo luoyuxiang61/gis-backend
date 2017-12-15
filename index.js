@@ -239,18 +239,13 @@ const RecordOfPayment = sequelize.define('RecordOfPayment', {
 
 // co(function* () {
 
-//     var sgdw1 = yield SGDW.findById(4);
-//     var cons = yield Contract.findAll({
+//     Contract.update({ ContractNO:"G13-176-2"},{
 //         where:{
 //             id:{
-//                 [Op.lte]:209
+//                 [Op.eq]:204
 //             }
 //         }
 //     })
-
-//     cons.forEach(element => {
-//         element.setSGDW(sgdw1);
-//     });
 
 // }).catch(function (e) {
 //     console.log(e);
@@ -319,6 +314,12 @@ function isEmptyObject(obj){
     return true;
 }
 
+
+
+app.all('*', function (req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    next();
+});
 
 
 
@@ -404,30 +405,10 @@ app.post("/contracts", urlencodedParser, function (req, res){
 })
 
 
-app.get('/pdf/:name',function(req,res){
-    res.header("Access-Control-Allow-Origin", "*");
 
-    var options = {
-        root: __dirname + '/public/',
-        dotfiles: 'deny',
-        headers: {
-            'x-timestamp': Date.now(),
-            'x-sent': true
-        }
-    };
 
-    var fileName = req.params.name;
-    res.sendFile(fileName, options, function (err) {
-        if (err) {
-            console.log(err);
-            res.status(err.status).end();
-        }
-        else {
-            console.log('Sent:', fileName);
-        }
-    });
-
-})
+//用express托管public文件下的pdf文件，供前端调用显示pdf
+app.use(express.static('public'))
 
 
 app.listen(3000)
