@@ -239,10 +239,10 @@ const RecordOfPayment = sequelize.define('RecordOfPayment', {
 
 // co(function* () {
 
-//     Contract.update({ ContractNO:"G13-176-2"},{
+//     Contract.destroy({
 //         where:{
 //             id:{
-//                 [Op.eq]:204
+//                 [Op.eq]:203
 //             }
 //         }
 //     })
@@ -402,6 +402,34 @@ app.post("/contracts", urlencodedParser, function (req, res){
             console.log(e);
         });
     }
+})
+
+
+
+//删除合同
+app.delete("/delete",function (req, res){
+    res.header("Access-Control-Allow-Origin", "*");
+
+
+    var cID = req.query.cID;
+    co(function* () {
+
+            var deletedNum = yield Contract.destroy({
+            where:{
+                id:{
+                    [Op.eq]: cID
+                }
+            }
+            })
+
+        if (deletedNum == 0 || deletedNum == undefined) {
+            res.send("没有删除任何记录")
+        } else {
+            res.send("删除了该记录！");
+        }
+        }).catch(function (e) {
+            console.log(e);
+        });
 })
 
 
