@@ -340,6 +340,9 @@ app.post("/contracts", urlencodedParser, function (req, res){
 
         co(function* () {
             var cons = yield Contract.findAll({
+                order:[
+                    ['id','desc']
+                ],
                 include: 
                 [{
                     model: SGDW,
@@ -407,7 +410,7 @@ app.post("/contracts", urlencodedParser, function (req, res){
 
 
 //删除合同
-app.delete("/delete",function (req, res){
+app.post("/delete",function (req, res){
     res.header("Access-Control-Allow-Origin", "*");
 
 
