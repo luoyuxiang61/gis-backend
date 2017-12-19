@@ -4,6 +4,25 @@ const bodyParser = require('body-parser')
 var jsonParser = bodyParser.json()
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
+const multer = require('multer')
+var storage = multer.diskStorage({
+    destination:function(req,file,cb){
+
+        cb(null,'./public')
+    },
+
+    filename:function(req,file,cb){
+        var fileFormat = (file.originalname).split('.');
+        cb(null, file.originalname);
+    }
+})
+
+
+var upload = multer({storage:storage}).single('pdf')
+
+
+
+
 const Sequelize = require('sequelize');
 const sequelize = new Sequelize('Contract', 'sa', 'Luoyuxiang61.', {
     host: 'localhost',
@@ -440,6 +459,24 @@ app.post("/delete",function (req, res){
 
 //用express托管public文件下的pdf文件，供前端调用显示pdf
 app.use(express.static('public'))
+
+
+//上传pdf文件
+app.post('/uploadPdf',  function (req, res) {
+    upload(req, res, function (err) {
+        if (err) {
+            // An error occurred when uploading
+            res.send("怎么回事？pdf文件上传失败！");
+        }else{
+
+            res.send("太棒了！pdf文件上传成功！")
+        }
+
+        
+    })
+
+
+})
 
 
 app.listen(3000)
