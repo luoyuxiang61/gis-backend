@@ -52,6 +52,9 @@ sequelize
     });
 
 
+
+
+    
 //用户Model（用户名，密码，真实姓名，角色）
 const User = sequelize.define('User', {
     UserName: {
@@ -199,31 +202,24 @@ const Contract = sequelize.define('Contract', {
         paranoid:true
     })
 
-JSDW.hasMany(Contract);
-SGDW.hasMany(Contract);
-Contract.belongsTo(JSDW);
-Contract.belongsTo(SGDW);
-
-
-
 
 //付款计划Model
 const PlanningOfPayment = sequelize.define('PlanningOfPayment', {
     PlanningDate: {
-        type:Sequelize.DATEONLY,
-        allowNull:false
+        type: Sequelize.DATEONLY,
+        allowNull: false
     },
     PlanningAmount: {
         type: Sequelize.NUMERIC(10, 4),
-        allowNull:false
+        allowNull: false
     },
     LinkMan: {
         type: Sequelize.STRING,
-        allowNull:false
+        allowNull: false
     },
     PhoneNumber: {
         type: Sequelize.STRING,
-        allowNull:false
+        allowNull: false
     }
 },
     {
@@ -235,16 +231,16 @@ const PlanningOfPayment = sequelize.define('PlanningOfPayment', {
 //付款记录Model
 const RecordOfPayment = sequelize.define('RecordOfPayment', {
     RecordDate: {
-        type:Sequelize.DATEONLY,
-        allowNull:false
+        type: Sequelize.DATEONLY,
+        allowNull: false
     },
     RecordAmount: {
         type: Sequelize.NUMERIC(10, 4),
-        allowNull:false
+        allowNull: false
     },
     Operator: {
         type: Sequelize.STRING,
-        allowNull:false
+        allowNull: false
     }
 },
     {
@@ -252,19 +248,35 @@ const RecordOfPayment = sequelize.define('RecordOfPayment', {
         paranoid: true
     })
 
+JSDW.hasMany(Contract);
+SGDW.hasMany(Contract);
+Contract.belongsTo(JSDW);
+Contract.belongsTo(SGDW);
+
+Contract.hasMany(PlanningOfPayment);
+Contract.hasMany(RecordOfPayment);
+PlanningOfPayment.belongsTo(Contract);
+RecordOfPayment.belongsTo(Contract);
+
+// sequelize.sync({force:true})
+
+
+
+
+
+
 
 
 
 
 // co(function* () {
 
-//     Contract.destroy({
-//         where:{
-//             id:{
-//                 [Op.eq]:203
-//             }
-//         }
-//     })
+
+
+
+
+
+
 
 // }).catch(function (e) {
 //     console.log(e);
@@ -283,8 +295,24 @@ const RecordOfPayment = sequelize.define('RecordOfPayment', {
 
 
 
-//     var sgdw = yield SGDW.findById(1);
-//     var jsdw = yield JSDW.findById(1);
+
+//     var sgdw = yield SGDW.create({
+//         Name:"苏州市2号施工单位",
+//         Address:"高新区科锐路2号",
+//         Email:"sgdw@163.com",
+//         LinkMan:"张连发",
+//         PhoneNumber:"123232322"
+//     })
+
+//     var jsdw = yield JSDW.create({
+//         Name: "苏州市2号建设单位",
+//         Address: "虎丘区科锐路2号",
+//         Email: "jsdw@163.com",
+//         LinkMan: "李发财",
+//         PhoneNumber: "123232322"
+//     })
+
+
 
 
 
@@ -305,7 +333,7 @@ const RecordOfPayment = sequelize.define('RecordOfPayment', {
 //         var con = yield Contract.create({
 //             ProjectName: "苏州吴中太湖新城市政基础设施工程中一路（中六路~塔韵路）、中二路（中六路~塔韵路）、中六路（友翔路~中二路）、中八路（友翔路~中三路）施工图设计",
 //             Sign_Date: new Date(2006, 0, 12),
-//             ContractNO: "G13-176-1",
+//             ContractNO: "G13-176-"+(i+150),
 //             ContractAmount: 454.2342+i*44.5,
 //             AmountPaid: 254.4523+i*44.321,
 //             Remark: "这是一个备注xxxxx",
@@ -335,13 +363,47 @@ function isEmptyObject(obj){
 
 
 
+//对所有的请求开启跨域访问
 app.all('*', function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     next();
 });
 
 
+//获取一个合同的详细信息，用于合同详情页面
+app.post('/contract',function(req,res){
 
+    var cNO = req.query.cNO;
+
+    co(function* () {
+
+        var c = yield Contract.findOne({
+            where:{
+                ContractNO:{
+                    [Op.eq]:cNO
+                }
+            },
+            include:[JSDW,SGDW]
+        })
+
+        c = c.get({plain:true});
+        
+        c.createdAt = c.createdAt.toLocaleString();
+        c.updatedAt = c.updatedAt.toLocaleString();
+
+        res.send(c);
+
+    }).catch(function (e) {
+        console.log(e);
+    });
+
+})
+
+
+
+
+
+//获取所有合同
 app.post("/contracts", urlencodedParser, function (req, res){
     res.header("Access-Control-Allow-Origin", "*");
 
