@@ -370,6 +370,17 @@ app.all('*', function (req, res, next) {
 });
 
 
+//根据表单数据创建一个新合同
+app.post('/addContract', urlencodedParser, function (req, res){
+
+    console.log(req.body)
+
+
+
+
+})
+
+
 //获取一个合同的详细信息，用于合同详情页面
 app.post('/contract',function(req,res){
 
@@ -448,9 +459,6 @@ app.post("/contracts", urlencodedParser, function (req, res){
                     },
                     ProjectName: {
                         [Op.like]: "%"+sProjectName+"%"
-                    },
-                    Status: {
-                        [Op.like]:"%"+sStatus+"%"
                     }
 
                 }
@@ -533,8 +541,7 @@ app.post('/uploadPdf',  function (req, res) {
 
             res.send("太棒了！pdf文件上传成功！")
         }
-
-        
+       
     })
 
 
