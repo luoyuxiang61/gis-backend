@@ -271,11 +271,20 @@ RecordOfPayment.belongsTo(Contract);
 
 // co(function* () {
 
+//     var cs = yield Contract.findAll({
+//         where:{
+//             ContractNO:{
+//                 [Op.eq]:"G13-176-290"
+//             }
+//         }
+//     })
 
+//     var con = cs[0];
 
-
-
-
+//     var rp1 = yield RecordOfPayment.create({RecordDate:new Date(),RecordAmount:100.4,Operator:"渣渣辉"})
+//     var rp2 = yield RecordOfPayment.create({ RecordDate: new Date(2016,1,29), RecordAmount: 120.4, Operator: "浩南哥"})
+    
+//     con.setRecordOfPayments([rp1,rp2])
 
 
 // }).catch(function (e) {
@@ -451,7 +460,9 @@ app.post("/contracts", urlencodedParser, function (req, res){
                             [Op.like]: "%"+sJSDW+"%"
                         }
                     }
-                }
+                },
+                PlanningOfPayment,
+                RecordOfPayment
                 ],
                 where: {
                     ContractNO: {
@@ -472,6 +483,7 @@ app.post("/contracts", urlencodedParser, function (req, res){
                 cs[i].Sign_Date = cs[i].Sign_Date.toLocaleString();
                 cs[i].createdAt = cs[i].createdAt.toLocaleString();
                 cs[i].updatedAt = cs[i].updatedAt.toLocaleString();
+                
             }
             res.send(cs)
 
