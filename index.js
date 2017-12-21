@@ -468,7 +468,10 @@ app.post("/contracts", urlencodedParser, function (req, res){
             var cs = [];
 
             for (var i = 0; i < cons.length; i++) {
-                cs[i] = yield cons[i].get({ plain: true })
+                cs[i] = yield cons[i].get({ plain: true });
+                cs[i].Sign_Date = cs[i].Sign_Date.toLocaleString();
+                cs[i].createdAt = cs[i].createdAt.toLocaleString();
+                cs[i].updatedAt = cs[i].updatedAt.toLocaleString();
             }
             res.send(cs)
 
