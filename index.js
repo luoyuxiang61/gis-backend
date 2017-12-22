@@ -588,6 +588,48 @@ app.post("/delete",function (req, res){
 
 
 
+//获取所有建设单位的名字，用于输入提示
+app.get('/jsdw',function(req,res){
+
+    co(function* () {
+
+        var jsdws = yield JSDW.findAll();
+        var names = [];
+
+        for(var i = 0;i<jsdws.length;i++){
+            var j = yield jsdws[i].get({plain:true});
+            names.push(j.Name);
+        }
+        res.send(JSON.stringify(names));
+
+    }).catch(function (e) {
+        console.log(e);
+    });
+
+})
+
+//获取所有施工单位的名字，用于输入提示
+app.get('/sgdw',function(req,res){
+
+    co(function* () {
+
+        var sgdws = yield SGDW.findAll();
+        var names = [];
+
+        for(var i=0;i<sgdws.length;i++){
+            var sg = yield sgdws[i].get({plain:true});
+            names.push(sg.Name);
+        }
+
+        res.send(names)
+
+    }).catch(function (e) {
+        console.log(e);
+    });
+})
+
+
+
 
 //用express托管public文件下的pdf文件，供前端调用显示pdf
 app.use(express.static('public'))
