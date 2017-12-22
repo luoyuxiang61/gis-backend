@@ -382,7 +382,27 @@ app.all('*', function (req, res, next) {
 //根据表单数据创建一个新合同
 app.post('/addContract', urlencodedParser, function (req, res){
 
-    console.log(req.body)
+    var con = {};
+
+    con.ContractNO = req.body.aContractNO;
+    con.ProjectName = req.body.aProjectName;
+    con.SGDW = req.body.aSGDW;
+    con.JSDW = req.body.aJSDW;
+    con.Sign_Date = new Date(req.body.aSign_Date);
+    con.ContractAmount = req.body.aContractAmount;
+    con.Remark = req.body.aRemark;
+    con.Operator = req.body.aOperator;
+    con.WayOfEntrusting = req.body.aWayOfEntrusting;
+    con.RelatedMaterials = req.body.aRelatedMaterials;
+
+    co(function* () {
+        var c = yield Contract.create(con);
+        res.send(c);
+        
+
+    }).catch(function (e) {
+        console.log(e);
+    });
 
 
 
@@ -420,10 +440,37 @@ app.post('/contract',function(req,res){
 })
 
 
-
-
-
 //获取所有合同
+app.get('/allContracts',function(req,res){
+
+    co(function* () {
+
+        var cons = yield Contract.findAll({
+            order: [
+                ['id', 'desc']
+            ]});
+        var cs = [];
+        for (var i = 0; i < cons.length; i++) {
+            cs[i] = yield cons[i].get({ plain: true });
+            cs[i].Sign_Date = cs[i].Sign_Date.toLocaleString();
+            cs[i].createdAt = cs[i].createdAt.toLocaleString();
+            cs[i].updatedAt = cs[i].updatedAt.toLocaleString();
+
+        }
+        res.send(cs)
+
+    }).catch(function (e) {
+        console.log(e);
+    });
+
+})
+
+
+
+
+
+
+//搜索所有满足条件的合同
 app.post("/contracts", urlencodedParser, function (req, res){
     res.header("Access-Control-Allow-Origin", "*");
 
