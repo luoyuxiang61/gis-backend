@@ -387,9 +387,9 @@ app.post('/addContract', urlencodedParser, function (req, res){
     con.Operator = req.body.aOperator;
     con.WayOfEntrusting = req.body.aWayOfEntrusting;
     con.RelatedMaterials = req.body.aRelatedMaterials;
-
-
-
+    con.Status = req.body.aContractStatus;
+    con.Create_User = req.body.aCreate_User;
+    
     co(function* () {
         var jsdw = yield JSDW.find({
             where:{
@@ -422,7 +422,7 @@ app.post('/addContract', urlencodedParser, function (req, res){
         yield con0.setSGDW(sgdw);
         yield con0.setJSDW(jsdw);
 
-        res.send(200)
+        res.send('ok')
         
 
     }).catch(function (e) {
