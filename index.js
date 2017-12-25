@@ -271,20 +271,13 @@ RecordOfPayment.belongsTo(Contract);
 
 // co(function* () {
 
-//     var cs = yield Contract.findAll({
+//     yield Contract.destroy({
 //         where:{
-//             ContractNO:{
-//                 [Op.eq]:"G13-176-290"
+//             id:{
+//                 [Op.gt]:300
 //             }
 //         }
 //     })
-
-//     var con = cs[0];
-
-//     var rp1 = yield RecordOfPayment.create({RecordDate:new Date(),RecordAmount:100.4,Operator:"渣渣辉"})
-//     var rp2 = yield RecordOfPayment.create({ RecordDate: new Date(2016,1,29), RecordAmount: 120.4, Operator: "浩南哥"})
-    
-//     con.setRecordOfPayments([rp1,rp2])
 
 
 // }).catch(function (e) {
@@ -388,8 +381,6 @@ app.post('/addContract', urlencodedParser, function (req, res){
 
     con.ContractNO = req.body.aContractNO;
     con.ProjectName = req.body.aProjectName;
-    con.SGDW = req.body.aSGDW;
-    con.JSDW = req.body.aJSDW;
     con.Sign_Date = new Date(req.body.aSign_Date);
     con.ContractAmount = req.body.aContractAmount;
     con.Remark = req.body.aRemark;
@@ -397,9 +388,41 @@ app.post('/addContract', urlencodedParser, function (req, res){
     con.WayOfEntrusting = req.body.aWayOfEntrusting;
     con.RelatedMaterials = req.body.aRelatedMaterials;
 
+
+
     co(function* () {
-        var c = yield Contract.create(con);
-        res.send(c);
+        var jsdw = yield JSDW.find({
+            where:{
+                Name:{
+                    [Op.eq]: req.body.aJSDW
+                }
+            }
+        })
+
+        var sgdw = yield SGDW.find({
+            where: {
+                Name: {
+                    [Op.eq]: req.body.aSGDW
+                }
+            }
+        })
+
+        if(jsdw == null) {
+            jsdw = yield JSDW.create({ Name: req.body.aJSDW})
+        }
+
+        if(sgdw == null) {
+            sgdw = yield SGDW.create({ Name: req.body.aSGDW})
+        }
+
+        var con0 = yield Contract.create(con);
+        
+        console.log(con0)
+
+        yield con0.setSGDW(sgdw);
+        yield con0.setJSDW(jsdw);
+
+        res.send(200)
         
 
     }).catch(function (e) {
@@ -450,7 +473,9 @@ app.get('/allContracts',function(req,res){
         var cons = yield Contract.findAll({
             order: [
                 ['id', 'desc']
-            ]});
+            ],
+            include:[SGDW,JSDW,PlanningOfPayment,RecordOfPayment]
+        });
         var cs = [];
         for (var i = 0; i < cons.length; i++) {
             cs[i] = yield cons[i].get({ plain: true });
@@ -596,12 +621,14 @@ app.get('/sgdw', function (req, res) {
     co(function* () {
 
         var sgdws = yield SGDW.findAll();
-        var names = [];
+        var names = "";
 
         for (var i = 0; i < sgdws.length; i++) {
             var sg = yield sgdws[i].get({ plain: true });
-            names.push(sg.Name);
+            names += sg.Name+",";
         }
+
+        names = names.substring(0,names.length-1)
 
         console.log(names)
         console.log(typeof (names))
@@ -618,12 +645,13 @@ app.get('/jsdw', function (req, res) {
     co(function* () {
 
         var jsdws = yield JSDW.findAll();
-        var names = [];
+        var names = "";
 
         for (var i = 0; i < jsdws.length; i++) {
             var sg = yield jsdws[i].get({ plain: true });
-            names.push(sg.Name);
+            names += sg.Name+",";
         }
+        names = names.substring(0, names.length - 1)
 
         console.log(names)
         console.log(typeof(names))
