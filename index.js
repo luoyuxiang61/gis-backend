@@ -3,6 +3,7 @@ var app = express()
 const bodyParser = require('body-parser')
 var jsonParser = bodyParser.json()
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
+var moment = require('moment')
 
 const multer = require('multer')
 var storage = multer.diskStorage({
@@ -149,7 +150,10 @@ const Contract = sequelize.define('Contract', {
     },
     Sign_Date: {
         type:Sequelize.DATEONLY,
-        allowNull:false
+        allowNull:false,
+        get() {
+            return moment(this.getDataValue('Sign_Date')).format('YYYY-MM-DD HH:mm:ss');
+        }
     },
     ContractNO: {
         type: Sequelize.STRING,
@@ -207,7 +211,10 @@ const Contract = sequelize.define('Contract', {
 const PlanningOfPayment = sequelize.define('PlanningOfPayment', {
     PlanningDate: {
         type: Sequelize.DATEONLY,
-        allowNull: false
+        allowNull: false,
+        get() {
+            return moment(this.getDataValue('PlanningDate')).format('YYYY-MM-DD HH:mm:ss');
+        }
     },
     PlanningAmount: {
         type: Sequelize.NUMERIC(10, 4),
@@ -232,7 +239,10 @@ const PlanningOfPayment = sequelize.define('PlanningOfPayment', {
 const RecordOfPayment = sequelize.define('RecordOfPayment', {
     RecordDate: {
         type: Sequelize.DATEONLY,
-        allowNull: false
+        allowNull: false,
+        get() {
+            return moment(this.getDataValue('RecordDate')).format('YYYY-MM-DD HH:mm:ss');
+        }
     },
     RecordAmount: {
         type: Sequelize.NUMERIC(10, 4),
