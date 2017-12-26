@@ -538,20 +538,20 @@ app.post('/editContract',urlencodedParser,function(req,res){
 //获取一个合同的详细信息，用于合同详情页面
 app.post('/contract',function(req,res){
 
-    var cNO = req.query.cNO;
+    var cId = req.query.cId;
 
     co(function* () {
 
-        var c = yield Contract.findOne({
+        var c = yield Contract.find({
             where:{
-                ContractNO:{
-                    [Op.eq]:cNO
+                id:{
+                    [Op.eq]: parseInt(cId)
                 }
             },
-            include:[JSDW,SGDW]
+            include:[JSDW,SGDW,PlanningOfPayment,RecordOfPayment]
         })
 
-        c = c.get({plain:true});
+        c =  yield c.get({plain:true});
         
         c.createdAt = c.createdAt.toLocaleString();
         c.updatedAt = c.updatedAt.toLocaleString();
@@ -718,9 +718,42 @@ app.post("/delete",function (req, res){
 
 app.post('/addPP',urlencodedParser,function(req,res){
 
-    console.log(req.body);
+   
+    var p = req.body;
+    var pp0 = {};
+    var cId = p.cId;
+    
+    pp0.PlanningDate = new Date(p.aPlanningDate);
+    pp0.PlanningAmount = parseFloat(p.aPlanningAmount);
+    pp0.LinkMan = p.aPPLinkMan;
+    pp0.PhoneNumber = p.aPPPhoneNumber;
 
-    res.send("yayayay")
+
+    co(function* () {
+
+        var pp1 = yield PlanningOfPayment.create(pp0);
+
+        var pc = yield Contract.find({
+            where:{
+                id:{
+                    [Op.eq]:cId
+                }
+            }
+        })
+
+        yield pp1.setContract(pc);
+
+        res.send("ok")
+
+
+
+    }).catch(function (e) {
+        console.log(e);
+    });
+    
+
+
+    
 
 })
 
