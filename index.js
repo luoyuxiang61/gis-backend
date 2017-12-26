@@ -444,6 +444,7 @@ app.post('/addContract', urlencodedParser, function (req, res){
         
 
     }).catch(function (e) {
+        console.log(e);
         res.send("发生错误！")
     });
 
@@ -700,6 +701,17 @@ app.post("/delete",function (req, res){
         }).catch(function (e) {
             console.log(e);
         });
+})
+
+
+//新增付款计划
+
+app.post('/addPP',urlencodedParser,function(req,res){
+
+    console.log(req.body);
+
+    res.send("yayayay")
+
 })
 
 
