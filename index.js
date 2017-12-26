@@ -434,7 +434,7 @@ app.post('/addContract', urlencodedParser, function (req, res){
         
 
     }).catch(function (e) {
-        console.log(e);
+        res.send("发生错误！")
     });
 
 })
@@ -488,7 +488,7 @@ app.post('/editContract',urlencodedParser,function(req,res){
             sgdw = yield SGDW.create({ Name: sg })
         }
 
-        var con0 = yield Contract.update(con,{
+        yield Contract.update(con,{
             where:{
                 id:{
                     [Op.eq]:eId
@@ -496,14 +496,17 @@ app.post('/editContract',urlencodedParser,function(req,res){
             }
         })
 
-        console.log(con0)
+        
+
+
+        
 
 
         res.send('ok')
 
 
     }).catch(function (e) {
-        console.log(e);
+        res.send("发生错误！")
     });
 
 })
