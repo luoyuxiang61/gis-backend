@@ -507,7 +507,17 @@ app.post('/editContract',urlencodedParser,function(req,res){
             }
         })
 
+        var newC = yield Contract.find({
+            where:{
+                id:{
+                    [Op.eq]:eId
+                }
+            }
+        })
         
+
+        yield newC.setSGDW(sgdw);
+        yield newC.setJSDW(jsdw);
 
 
         
