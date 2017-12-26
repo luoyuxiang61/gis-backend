@@ -372,6 +372,12 @@ app.all('*', function (req, res, next) {
 });
 
 
+//去空格函数
+function removeAllSpace(str) {
+    return str.replace(/\s+/g, "");
+}
+
+
 //根据表单数据创建一个新合同
 app.post('/addContract', urlencodedParser, function (req, res){
 
@@ -389,12 +395,14 @@ app.post('/addContract', urlencodedParser, function (req, res){
     con.RelatedMaterials = req.body.aRelatedMaterials;
     con.Status = req.body.aContractStatus;
     con.Create_User = req.body.aCreate_User;
-    
+
+    var js = removeAllSpace(req.body.aJSDW);
+    var sg = removeAllSpace(req.body.aSGDW);
     co(function* () {
         var jsdw = yield JSDW.find({
             where:{
                 Name:{
-                    [Op.eq]: req.body.aJSDW
+                    [Op.eq]: js
                 }
             }
         })
@@ -402,17 +410,17 @@ app.post('/addContract', urlencodedParser, function (req, res){
         var sgdw = yield SGDW.find({
             where: {
                 Name: {
-                    [Op.eq]: req.body.aSGDW
+                    [Op.eq]: sg
                 }
             }
         })
 
         if(jsdw == null) {
-            jsdw = yield JSDW.create({ Name: req.body.aJSDW})
+            jsdw = yield JSDW.create({ Name: js})
         }
 
         if(sgdw == null) {
-            sgdw = yield SGDW.create({ Name: req.body.aSGDW})
+            sgdw = yield SGDW.create({ Name: sg})
         }
 
         var con0 = yield Contract.create(con);
@@ -429,10 +437,78 @@ app.post('/addContract', urlencodedParser, function (req, res){
         console.log(e);
     });
 
+})
 
 
+//根据表单数据修改一个合同
+app.post('/editContract',urlencodedParser,function(req,res){
+
+    
+
+    var con = {};
+    con.ContractNO = req.body.eContractNO;
+    con.ProjectName = req.body.eProjectName;
+    con.Sign_Date = new Date(req.body.eSign_Date);
+    con.ContractAmount = req.body.eContractAmount;
+    con.Remark = req.body.eRemark;
+    con.Operator = req.body.eOperator;
+    con.WayOfEntrusting = req.body.eWayOfEntrusting;
+    con.RelatedMaterials = req.body.eRelatedMaterials;
+    con.Status = req.body.eContractStatus;
+    con.Modify_User = req.body.Modify_User;
+
+
+    var eId = parseInt(req.body.eId);
+    var js = removeAllSpace(req.body.eJSDW);
+    var sg = removeAllSpace(req.body.eSGDW);
+
+
+    co(function* () {
+        var jsdw = yield JSDW.find({
+            where: {
+                Name: {
+                    [Op.eq]: js
+                }
+            }
+        })
+
+        var sgdw = yield SGDW.find({
+            where: {
+                Name: {
+                    [Op.eq]: sg
+                }
+            }
+        })
+
+        if (jsdw == null) {
+            jsdw = yield JSDW.create({ Name: js })
+        }
+
+        if (sgdw == null) {
+            sgdw = yield SGDW.create({ Name: sg })
+        }
+
+        var con0 = yield Contract.update(con,{
+            where:{
+                id:{
+                    [Op.eq]:eId
+                }
+            }
+        })
+
+        console.log(con0)
+
+
+        res.send('ok')
+
+
+    }).catch(function (e) {
+        console.log(e);
+    });
 
 })
+
+
 
 
 //获取一个合同的详细信息，用于合同详情页面
