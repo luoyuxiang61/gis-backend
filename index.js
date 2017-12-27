@@ -199,6 +199,11 @@ const Contract = sequelize.define('Contract', {
     },
     Status: {
         type:Sequelize.STRING
+    },
+    HasPDF: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        defaultValue: 0
     }
 },
     {
@@ -301,13 +306,13 @@ RecordOfPayment.belongsTo(Contract);
 
 
 
-
+//
 // co(function* () {
-
-
-
-
-
+//
+//
+//
+//
+//
 //     var sgdw = yield SGDW.create({
 //         Name:"苏州市2号施工单位",
 //         Address:"高新区科锐路2号",
@@ -315,7 +320,7 @@ RecordOfPayment.belongsTo(Contract);
 //         LinkMan:"张连发",
 //         PhoneNumber:"123232322"
 //     })
-
+//
 //     var jsdw = yield JSDW.create({
 //         Name: "苏州市2号建设单位",
 //         Address: "虎丘区科锐路2号",
@@ -323,25 +328,25 @@ RecordOfPayment.belongsTo(Contract);
 //         LinkMan: "李发财",
 //         PhoneNumber: "123232322"
 //     })
-
-
-
-
-
+//
+//
+//
+//
+//
 //     for(var i=0;i<150;i++){
-
+//
 //         var statusx="完成";
 //         if(i%2==0)statusx="进行中";
 //         if(i%3==0)statusx="超时未完成";
 //         if(i%5==0)statusx="暂停";
-
-
+//
+//
 //         var typex = "G";
 //         if (i % 2 == 0)typex="H";
 //         if (i % 5 == 0)typex="A";
-
-
-
+//
+//
+//
 //         var con = yield Contract.create({
 //             ProjectName: "苏州吴中太湖新城市政基础设施工程中一路（中六路~塔韵路）、中二路（中六路~塔韵路）、中六路（友翔路~中二路）、中八路（友翔路~中三路）施工图设计",
 //             Sign_Date: new Date(2006, 0, 12),
@@ -1004,14 +1009,29 @@ app.use(express.static('public'))
 
 
 //上传pdf文件
-app.post('/uploadPdf',  function (req, res) {
+app.post('/uploadPdf',function (req, res) {
     upload(req, res, function (err) {
         if (err) {
             // An error occurred when uploading
             res.send("怎么回事？pdf文件上传失败！");
         }else{
-
             res.send("太棒了！pdf文件上传成功！")
+
+            co(function* () {
+
+              yield Contract.update({HasPDF:1},{
+                where:{
+                  ContractNO:{
+                    [Op.eq]:req.file.filename.split(".")[0]
+                  }
+                }
+              })
+
+
+            }).catch(function (e) {
+                console.log(e);
+            });
+
         }
 
     })
