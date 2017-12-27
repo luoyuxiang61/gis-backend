@@ -733,6 +733,11 @@ app.post('/addPP',urlencodedParser,function(req,res){
             }
         })
 
+        yield pc.update({Modify_User:req.query.user})
+
+
+
+
         yield pp1.setContract(pc);
 
         res.send("ok")
@@ -764,6 +769,15 @@ app.post('/editPP',urlencodedParser,function(req,res){
       }
     })
 
+    yield Contract.update({Modify_User:req.query.user},{
+      where:{
+        id:{
+          [Op.eq]:req.query.cId
+        }
+      }
+    })
+
+
     res.send('ok');
 
     }).catch(function (e) {
@@ -782,6 +796,14 @@ app.post('/dropPP',function(req,res) {
       where:{
         id:{
           [Op.eq]:pId
+        }
+      }
+    })
+
+    yield Contract.update({Modify_User:req.query.user},{
+      where:{
+        id:{
+          [Op.eq]:req.query.cId
         }
       }
     })
@@ -827,6 +849,16 @@ app.post('/addRP',urlencodedParser,function(req,res){
 
     yield r.setContract(c);
 
+    yield Contract.update({Modify_User:req.query.user},{
+      where:{
+        id:{
+          [Op.eq]:req.query.cId
+        }
+      }
+    })
+
+
+
     res.send('ok');
 
   }).catch(function (e) {
@@ -853,6 +885,14 @@ app.post('/editRP',urlencodedParser,function(req,res){
       }
     })
 
+    yield Contract.update({Modify_User:req.query.user},{
+      where:{
+        id:{
+          [Op.eq]:req.query.cId
+        }
+      }
+    })
+
     res.send('ok');
 
     }).catch(function (e) {
@@ -875,6 +915,14 @@ app.post('/dropRP',function(req,res){
       where:{
         id:{
           [Op.eq]:pId
+        }
+      }
+    })
+
+    yield Contract.update({Modify_User:req.query.user},{
+      where:{
+        id:{
+          [Op.eq]:req.query.cId
         }
       }
     })
