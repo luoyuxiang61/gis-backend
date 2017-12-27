@@ -55,13 +55,13 @@ sequelize
 
 
 
-    
+
 //用户Model（用户名，密码，真实姓名，角色）
 const User = sequelize.define('User', {
     UserName: {
         type:Sequelize.STRING,
         allowNull:false
-    }, 
+    },
     Password: {
         type: Sequelize.STRING,
         allowNull:false
@@ -146,7 +146,7 @@ const SGDW = sequelize.define('SGDW', {
 const Contract = sequelize.define('Contract', {
     ProjectName: {
         type: Sequelize.STRING,
-        allowNull:false       
+        allowNull:false
     },
     Sign_Date: {
         type:Sequelize.DATEONLY,
@@ -202,7 +202,7 @@ const Contract = sequelize.define('Contract', {
     }
 },
     {
-        tableName: 'Contract', 
+        tableName: 'Contract',
         paranoid:true
     })
 
@@ -434,14 +434,14 @@ app.post('/addContract', urlencodedParser, function (req, res){
         }
 
         var con0 = yield Contract.create(con);
-        
+
         console.log(con0)
 
         yield con0.setSGDW(sgdw);
         yield con0.setJSDW(jsdw);
 
         res.send('ok')
-        
+
 
     }).catch(function (e) {
         console.log(e);
@@ -454,7 +454,7 @@ app.post('/addContract', urlencodedParser, function (req, res){
 //根据表单数据修改一个合同
 app.post('/editContract',urlencodedParser,function(req,res){
 
-    
+
 
     var con = {};
     con.ContractNO = req.body.eContractNO;
@@ -514,18 +514,10 @@ app.post('/editContract',urlencodedParser,function(req,res){
                 }
             }
         })
-        
 
         yield newC.setSGDW(sgdw);
         yield newC.setJSDW(jsdw);
-
-
-        
-
-
-        res.send('ok')
-
-
+        res.send('ok');
     }).catch(function (e) {
         res.send("发生错误！")
     });
@@ -552,7 +544,7 @@ app.post('/contract',function(req,res){
         })
 
         c =  yield c.get({plain:true});
-        
+
         c.createdAt = c.createdAt.toLocaleString();
         c.updatedAt = c.updatedAt.toLocaleString();
 
@@ -607,10 +599,10 @@ app.post("/contracts", urlencodedParser, function (req, res){
     if (!isEmptyObject(keys)){
 
         var sContractNO = keys.sContractNO;
-        var sProjectName = keys.sProjectName; 
+        var sProjectName = keys.sProjectName;
         var sSGDW = keys.sSGDW;
         var sJSDW = keys.sJSDW;
-        var sStatus = keys.sStatus;   
+        var sStatus = keys.sStatus;
 
 
         co(function* () {
@@ -618,7 +610,7 @@ app.post("/contracts", urlencodedParser, function (req, res){
                 order:[
                     ['id','desc']
                 ],
-                include: 
+                include:
                 [{
                     model: SGDW,
                     where: {
@@ -657,7 +649,7 @@ app.post("/contracts", urlencodedParser, function (req, res){
                 cs[i].Sign_Date = cs[i].Sign_Date.toLocaleString();
                 cs[i].createdAt = cs[i].createdAt.toLocaleString();
                 cs[i].updatedAt = cs[i].updatedAt.toLocaleString();
-                
+
             }
             res.send(cs)
 
@@ -718,11 +710,11 @@ app.post("/delete",function (req, res){
 
 app.post('/addPP',urlencodedParser,function(req,res){
 
-   
+
     var p = req.body;
     var pp0 = {};
     var cId = p.cId;
-    
+
     pp0.PlanningDate = new Date(p.aPlanningDate);
     pp0.PlanningAmount = parseFloat(p.aPlanningAmount);
     pp0.LinkMan = p.aPPLinkMan;
@@ -750,10 +742,60 @@ app.post('/addPP',urlencodedParser,function(req,res){
     }).catch(function (e) {
         console.log(e);
     });
-    
+
+})
 
 
-    
+//修改付款计划
+app.post('/editPP',urlencodedParser,function(req,res){
+
+
+  var ePP = req.body;
+  var pId = req.query.id;
+  ePP.PlanningDate = new Date(ePP.PlanningDate);
+
+  co(function* () {
+
+    var u = yield PlanningOfPayment.update(ePP,{
+      where:{
+        id:{
+          [Op.eq]:pId
+        }
+      }
+    })
+
+    res.send('ok');
+
+    }).catch(function (e) {
+        console.log(e);
+        res.send("修改失败！");
+    });
+
+})
+
+//删除付款计划
+app.post('/dropPP',function(req,res) {
+  var pId = req.query.id;
+  co(function* () {
+
+    var d = yield PlanningOfPayment.destroy({
+      where:{
+        id:{
+          [Op.eq]:pId
+        }
+      }
+    })
+
+    if(d != 0){
+      res.send('ok');
+    }else{
+      res.send('error')
+    }
+
+    }).catch(function (e) {
+        console.log(e);
+        res.send("删除失败！");
+    });
 
 })
 
@@ -825,7 +867,7 @@ app.post('/uploadPdf',  function (req, res) {
 
             res.send("太棒了！pdf文件上传成功！")
         }
-       
+
     })
 
 
@@ -833,10 +875,3 @@ app.post('/uploadPdf',  function (req, res) {
 
 
 app.listen(3000)
-
-
-
-
-
-
-
