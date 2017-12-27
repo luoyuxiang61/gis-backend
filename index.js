@@ -813,10 +813,84 @@ app.post('/addRP',urlencodedParser,function(req,res){
 
   var cId = req.body.cId;
 
-  console.log(rp0);
+  co(function* () {
+
+    var r = yield RecordOfPayment.create(rp0);
+
+    var c = yield Contract.find({
+      where:{
+        id:{
+          [Op.eq]:cId
+        }
+      }
+    })
+
+    yield r.setContract(c);
+
+    res.send('ok');
+
+  }).catch(function (e) {
+      console.log(e);
+      res.send("添加失败！");
+  });
+
+})
+
+//修改付款记录
+app.post('/editRP',urlencodedParser,function(req,res){
+
+  var eRP = req.body;
+  var pId = req.query.id;
+  eRP.RecordDate = new Date(eRP.RecordDate);
+
+  co(function* () {
+
+    var u = yield RecordOfPayment.update(eRP,{
+      where:{
+        id:{
+          [Op.eq]:pId
+        }
+      }
+    })
+
+    res.send('ok');
+
+    }).catch(function (e) {
+        console.log(e);
+        res.send("修改失败！");
+    });
+
 
 
 })
+
+
+//删除付款记录
+app.post('/dropRP',function(req,res){
+
+  var pId = req.query.id;
+  co(function* () {
+
+    var d = yield RecordOfPayment.destroy({
+      where:{
+        id:{
+          [Op.eq]:pId
+        }
+      }
+    })
+
+    if(d != 0){
+      res.send('ok');
+    }else{
+      res.send('error')
+    }
+
+    }).catch(function (e) {
+        console.log(e);
+        res.send("删除失败！");
+    });
+})
+
 
 
 
