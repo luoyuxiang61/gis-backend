@@ -801,6 +801,25 @@ app.post('/dropPP',function(req,res) {
 
 
 
+//新增付款记录
+app.post('/addRP',urlencodedParser,function(req,res){
+
+  console.log(req.body);
+
+  var rp0 = {};
+  rp0.RecordDate = new Date(req.body.aRecordDate);
+  rp0.RecordAmount = parseFloat(req.body.aRecordAmount);
+  rp0.Operator = req.body.aRPOperator;
+
+  var cId = req.body.cId;
+
+  console.log(rp0);
+
+
+})
+
+
+
 //获取所有施工单位的名字，用于输入提示
 app.get('/sgdw', function (req, res) {
 
