@@ -733,7 +733,7 @@ app.post('/addPP',urlencodedParser,function(req,res){
             }
         })
 
-        yield pc.update({Modify_User:req.query.user})
+        yield pc.update({Modify_User:req.body.user})
 
 
 
@@ -769,7 +769,7 @@ app.post('/editPP',urlencodedParser,function(req,res){
       }
     })
 
-    yield Contract.update({Modify_User:req.query.user},{
+    yield Contract.update({Modify_User:req.body.user},{
       where:{
         id:{
           [Op.eq]:req.query.cId
@@ -788,7 +788,7 @@ app.post('/editPP',urlencodedParser,function(req,res){
 })
 
 //删除付款计划
-app.post('/dropPP',function(req,res) {
+app.post('/dropPP',urlencodedParser,function(req,res) {
   var pId = req.query.id;
   co(function* () {
 
@@ -800,7 +800,7 @@ app.post('/dropPP',function(req,res) {
       }
     })
 
-    yield Contract.update({Modify_User:req.query.user},{
+    yield Contract.update({Modify_User:req.body.user},{
       where:{
         id:{
           [Op.eq]:req.query.cId
@@ -849,7 +849,10 @@ app.post('/addRP',urlencodedParser,function(req,res){
 
     yield r.setContract(c);
 
-    yield Contract.update({Modify_User:req.query.user},{
+    console.log("******************************"+req.query.user)
+    console.log(req.body)
+
+    yield Contract.update({Modify_User:req.body.user},{
       where:{
         id:{
           [Op.eq]:req.query.cId
@@ -885,7 +888,7 @@ app.post('/editRP',urlencodedParser,function(req,res){
       }
     })
 
-    yield Contract.update({Modify_User:req.query.user},{
+    yield Contract.update({Modify_User:req.body.user},{
       where:{
         id:{
           [Op.eq]:req.query.cId
@@ -906,7 +909,9 @@ app.post('/editRP',urlencodedParser,function(req,res){
 
 
 //删除付款记录
-app.post('/dropRP',function(req,res){
+app.post('/dropRP',urlencodedParser,function(req,res){
+
+
 
   var pId = req.query.id;
   co(function* () {
@@ -919,7 +924,7 @@ app.post('/dropRP',function(req,res){
       }
     })
 
-    yield Contract.update({Modify_User:req.query.user},{
+    yield Contract.update({Modify_User:req.body.user},{
       where:{
         id:{
           [Op.eq]:req.query.cId
