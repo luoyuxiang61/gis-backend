@@ -263,6 +263,19 @@ const RecordOfPayment = sequelize.define('RecordOfPayment', {
         paranoid: true
     })
 
+
+//已上传的pdf文件
+const Pdf = sequelize.define('Pdf', {
+    FileName: {
+        type: Sequelize.STRING,
+        allowNull: false
+    }
+},
+    {
+        tableName: 'Pdf',
+        paranoid: true
+    })
+
 JSDW.hasMany(Contract);
 SGDW.hasMany(Contract);
 Contract.belongsTo(JSDW);
@@ -306,13 +319,13 @@ RecordOfPayment.belongsTo(Contract);
 
 
 
-//
+
 // co(function* () {
-//
-//
-//
-//
-//
+
+
+
+
+
 //     var sgdw = yield SGDW.create({
 //         Name:"苏州市2号施工单位",
 //         Address:"高新区科锐路2号",
@@ -320,7 +333,7 @@ RecordOfPayment.belongsTo(Contract);
 //         LinkMan:"张连发",
 //         PhoneNumber:"123232322"
 //     })
-//
+
 //     var jsdw = yield JSDW.create({
 //         Name: "苏州市2号建设单位",
 //         Address: "虎丘区科锐路2号",
@@ -328,25 +341,25 @@ RecordOfPayment.belongsTo(Contract);
 //         LinkMan: "李发财",
 //         PhoneNumber: "123232322"
 //     })
-//
-//
-//
-//
-//
+
+
+
+
+
 //     for(var i=0;i<150;i++){
-//
+
 //         var statusx="完成";
 //         if(i%2==0)statusx="进行中";
 //         if(i%3==0)statusx="超时未完成";
 //         if(i%5==0)statusx="暂停";
-//
-//
+
+
 //         var typex = "G";
 //         if (i % 2 == 0)typex="H";
 //         if (i % 5 == 0)typex="A";
-//
-//
-//
+
+
+
 //         var con = yield Contract.create({
 //             ProjectName: "苏州吴中太湖新城市政基础设施工程中一路（中六路~塔韵路）、中二路（中六路~塔韵路）、中六路（友翔路~中二路）、中八路（友翔路~中三路）施工图设计",
 //             Sign_Date: new Date(2006, 0, 12),
@@ -1027,6 +1040,8 @@ app.post('/uploadPdf',function (req, res) {
                 }
               })
 
+              yield Pdf.create({ FileName: req.file.filename.split(".")[0]})
+
 
             }).catch(function (e) {
                 console.log(e);
@@ -1036,6 +1051,34 @@ app.post('/uploadPdf',function (req, res) {
 
     })
 
+
+})
+
+//检查与合同编号对应的pdf文件是否已经上传
+app.post('/getPDF',function(req,res) {
+
+    var FileName = req.query.FileName;
+
+    co(function* () {
+
+        var n = yield Pdf.count({
+            where:{
+                FileName:{
+                    [Op.eq]:FileName
+                }
+            }
+        })
+
+        if(n == 0) {
+            res.send('no');
+        }else{
+            res.send('yes');
+        }
+
+    }).catch(function (e) {
+        console.log(e);
+    });
+    
 
 })
 
