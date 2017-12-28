@@ -1040,4 +1040,36 @@ app.post('/uploadPdf',function (req, res) {
 })
 
 
+app.post('/login',function(req,res){
+
+
+    var UserName = req.query.userName;
+    var Password = req.query.password;
+    
+    co(function* () {
+
+       var user = yield User.find({
+            where:{
+                UserName:{
+                    [Op.eq]:UserName
+                },
+                Password:{
+                    [Op.eq]:Password
+                }
+            }
+        })
+
+        res.send(user);
+
+
+    }).catch(function (e) {
+        console.log(e);
+    });
+    
+
+
+
+})
+
+
 app.listen(3000)
