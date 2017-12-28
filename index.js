@@ -327,7 +327,7 @@ RecordOfPayment.belongsTo(Contract);
 
 
 //     var sgdw = yield SGDW.create({
-//         Name:"苏州市2号施工单位",
+//         Name:"苏州市5号施工单位",
 //         Address:"高新区科锐路2号",
 //         Email:"sgdw@163.com",
 //         LinkMan:"张连发",
@@ -335,7 +335,7 @@ RecordOfPayment.belongsTo(Contract);
 //     })
 
 //     var jsdw = yield JSDW.create({
-//         Name: "苏州市2号建设单位",
+//         Name: "苏州市5号建设单位",
 //         Address: "虎丘区科锐路2号",
 //         Email: "jsdw@163.com",
 //         LinkMan: "李发财",
@@ -346,7 +346,7 @@ RecordOfPayment.belongsTo(Contract);
 
 
 
-//     for(var i=0;i<150;i++){
+//     for(var i=0;i<50;i++){
 
 //         var statusx="完成";
 //         if(i%2==0)statusx="进行中";
@@ -362,7 +362,7 @@ RecordOfPayment.belongsTo(Contract);
 
 //         var con = yield Contract.create({
 //             ProjectName: "苏州吴中太湖新城市政基础设施工程中一路（中六路~塔韵路）、中二路（中六路~塔韵路）、中六路（友翔路~中二路）、中八路（友翔路~中三路）施工图设计",
-//             Sign_Date: new Date(2006, 0, 12),
+//             Sign_Date: new Date(2018, 0, 12),
 //             ContractNO: "G13-176-"+(i+150),
 //             ContractAmount: 454.2342+i*44.5,
 //             AmountPaid: 254.4523+i*44.321,
@@ -824,7 +824,6 @@ app.post("/delete",function (req, res){
 
 
 //新增付款计划
-
 app.post('/addPP',urlencodedParser,function(req,res){
 
 
@@ -1027,8 +1026,6 @@ app.post('/editRP',urlencodedParser,function(req,res){
 
 //删除付款记录
 app.post('/dropRP',urlencodedParser,function(req,res){
-
-
 
   var pId = req.query.id;
   co(function* () {
