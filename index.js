@@ -705,6 +705,8 @@ app.post('/typeContracts', urlencodedParser ,function(req,res) {
     var type = req.body.type;
     var typev =  req.body.typev;
 
+
+
     if(type == 'status') {
         co(function* () {
             var cons = yield Contract.findAll({
@@ -744,6 +746,50 @@ app.post('/typeContracts', urlencodedParser ,function(req,res) {
             console.log(e);
         });
 
+    }
+
+    if(type == 'year') {
+        co(function* () {
+
+            var year1 = new Date(req.body.year1);
+            var year2 = new Date(req.body.year2);
+
+            var cons = yield Contract.findAll({
+                order: [
+                    ['id', 'desc']
+                ],
+                include:
+                    [{
+                        model: SGDW
+                    },
+                    {
+                        model: JSDW
+                    },
+                        PlanningOfPayment,
+                        RecordOfPayment
+                    ],
+                where: {
+                    Sign_Date: {
+                        [Op.between]:[year1,year2]
+                    }
+                }
+
+            })
+
+            var cs = [];
+
+            for (var i = 0; i < cons.length; i++) {
+                cs[i] = yield cons[i].get({ plain: true });
+                cs[i].Sign_Date = cs[i].Sign_Date.toLocaleString();
+                cs[i].createdAt = cs[i].createdAt.toLocaleString();
+                cs[i].updatedAt = cs[i].updatedAt.toLocaleString();
+
+            }
+            res.send(cs)
+
+        }).catch(function (e) {
+            console.log(e);
+        });
     }
 
 })
