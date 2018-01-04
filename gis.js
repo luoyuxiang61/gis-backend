@@ -8,7 +8,7 @@ var config = {
     password: 'Luoyuxiang61.',  
     server: 'localhost',  
     // When you connect to Azure SQL Database, you need these next options.  
-    options: {database: 'Silverlight_NETDA'}  
+    options: {database: 'Silverlight_SND'}  
 };  
 var connection = new Connection(config);  
 connection.on('connect', function(err) {  
