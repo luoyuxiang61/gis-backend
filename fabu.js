@@ -267,7 +267,7 @@ app.post('/updateLayer', (req,res) => {
             }
         })
 
-        console.log(oneLayer)
+
         res.send(oneLayer)
     }).catch(function (e) {
         console.log(e);
