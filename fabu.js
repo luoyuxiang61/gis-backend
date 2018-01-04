@@ -203,10 +203,6 @@ app.get('/layersForTree',(req,res) => {
 
         res.send(layersForTree)
 
-
-
-
-
     }).catch(function (e) {
         console.log(e);
     });
@@ -234,9 +230,48 @@ app.get('/oneLayer',function(req,res) {
 
 //修改图层属性
 app.post('/updateLayer', (req,res) => {
-    console.log(req.body);
+
+    let change = {}
+    change[req.body.name] = req.body.value
     
-    res.send('111111111')
+    console.log(change);
+
+    if(req.body.name == 'LayerType') {
+        switch(change[req.body.name]) {
+            case '0':
+                change[req.body.name] = 'GroupLayer';
+                break;
+            case '1':
+                change[req.body.name] = 'TiledService';
+                break;
+            case '2':
+                change[req.body.name] = 'FeatureLayer';
+                break;
+            case '3':
+                change[req.body.name] = 'GeometryService';
+                break;
+            default:
+                console.log('发生错误！')
+        }
+    }
+
+    console.log(change);
+
+
+    co(function* () {
+        let oneLayer = yield BaseMapLayer.update(change,{
+            where: {
+                Id: {
+                    [Op.eq]: req.body.pk
+                }
+            }
+        })
+
+        console.log(oneLayer)
+        res.send(oneLayer)
+    }).catch(function (e) {
+        console.log(e);
+    });
 
 })
 
