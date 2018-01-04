@@ -157,8 +157,8 @@ const BaseMapLayer = sequelize.define('BaseMapLayer', {
     })
 
 
-
-
+app.use(bodyParser.urlencoded())
+app.use(bodyParser.json())
 
 //对所有的请求开启跨域访问
 app.all('*', function (req, res, next) {
@@ -171,25 +171,92 @@ app.all('*', function (req, res, next) {
 app.get('/layersForTree',(req,res) => {
 
     co(function* () {
-        let layersForTree = yield BaseMapLayer.findAll();
-        let xx = [];
-
-        layersForTree.forEach(element => {
-            element = element.get({plain:true});
-            if(element.ParentId == 0) {
-                xx.push(element)
+        let layersForTree = [];
+        let fathers = yield BaseMapLayer.findAll({
+            where: {
+                ParentId: {
+                    [Op.eq]:0
+                }
             }
         });
-        res.send(xx);
+        let sons = yield BaseMapLayer.findAll({
+            where: {
+                ParentId: {
+                    [Op.not]: 0
+                }
+            }
+        })
+
+        fathers.forEach(father => {         
+            let item = {
+                father: {},
+                sons: []
+            }
+            item.father = father
+            sons.forEach(son => {
+                if(son.ParentId == father.Id) {
+                    item.sons.push(son)
+                }
+            });
+            layersForTree.push(item)
+        });
+
+        res.send(layersForTree)
+
+
+
+
+
     }).catch(function (e) {
         console.log(e);
     });
 
+})
+
+//根据id获取一个图层
+app.get('/oneLayer',function(req,res) {
+    co(function* () {
+        let oneLayer = yield BaseMapLayer.find({
+            where: {
+                Id: {
+                    [Op.eq]:req.query.layerId
+                }
+            }
+        })
+
+        res.send(oneLayer)
+    }).catch(function (e) {
+        console.log(e);
+    });
+
+})
+
+
+//修改图层属性
+app.post('/updateLayer', (req,res) => {
+    console.log(req.body);
+    
+    res.send('111111111')
+
+})
 
 
 
+//表格编辑需要的数据源
+app.get('/yesno',function(req,res) {
+    res.send(JSON.stringify([
+        {value: 1,text: '是'},
+        {value: 0,text: '否'}
+    ]))
+})
 
-
+app.get('/layerType',(req,res) => {
+    res.send(JSON.stringify([
+        { value: 0, text: 'GroupLayer' },
+        { value: 1, text: 'TiledService' },
+        { value: 2, text: 'FeatureLayer' },
+        { value: 3, text: 'GeometryService' },
+    ]))
 })
 
 
