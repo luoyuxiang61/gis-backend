@@ -231,6 +231,8 @@ app.get('/oneLayer',function(req,res) {
 //修改图层属性
 app.post('/updateLayer', (req,res) => {
 
+    
+
     let change = {}
     change[req.body.name] = req.body.value
     
