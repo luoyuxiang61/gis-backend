@@ -9,14 +9,14 @@ const urlencodedParser = bodyParser.urlencoded()
 
 
 sequelize
-    .authenticate()
-    .then(() => {
-        console.log('Connection has been established successfully.');
-    })
-    .catch(err => {
-        console.error('Unable to connect to the database:', err);
-    });
-    
+  .authenticate()
+  .then(() => {
+    console.log('Connection has been established successfully.');
+  })
+  .catch(err => {
+    console.error('Unable to connect to the database:', err);
+  });
+
 app.use(bodyParser.urlencoded())
 app.use(bodyParser.json())
 
