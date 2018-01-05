@@ -156,6 +156,99 @@ const BaseMapLayer = sequelize.define('BaseMapLayer', {
         timestamps:false
     })
 
+const BaseLayerField = sequelize.define('BaseLayerField', {
+    Id:
+        {
+            type: 'INT',
+            allowNull: false,
+            defaultValue: null,
+            primaryKey: true,
+            foreignKey: [Object]
+        },
+    FieldName:
+        {
+            type: 'NVARCHAR',
+            allowNull: true,
+            defaultValue: null,
+            primaryKey: false
+        },
+    Alias:
+        {
+            type: 'NVARCHAR',
+            allowNull: true,
+            defaultValue: null,
+            primaryKey: false
+        },
+    DisplayName:
+        {
+            type: 'NVARCHAR',
+            allowNull: true,
+            defaultValue: null,
+            primaryKey: false
+        },
+    IsDisplay:
+        {
+            type: 'INT',
+            allowNull: true,
+            defaultValue: null,
+            primaryKey: false
+        },
+    IsSearch:
+        {
+            type: 'INT',
+            allowNull: true,
+            defaultValue: null,
+            primaryKey: false
+        },
+    UnitName:
+        {
+            type: 'NVARCHAR',
+            allowNull: true,
+            defaultValue: null,
+            primaryKey: false
+        },
+    IsShowMuFormSquareMeters:
+        {
+            type: 'INT',
+            allowNull: true,
+            defaultValue: null,
+            primaryKey: false
+        },
+    LayerId:
+        {
+            type: 'INT',
+            allowNull: true,
+            defaultValue: null,
+            primaryKey: false
+        },
+    LayerName:
+        {
+            type: 'NVARCHAR',
+            allowNull: true,
+            defaultValue: null,
+            primaryKey: false
+        },
+    SortCode:
+        {
+            type: 'INT',
+            allowNull: true,
+            defaultValue: null,
+            primaryKey: false
+        },
+    IsLabel:
+        {
+            type: 'INT',
+            allowNull: true,
+            defaultValue: null,
+            primaryKey: false,
+            
+        }
+},
+{
+    tableName:'BaseLayerField',
+    timestamps: false
+})
+
 
 app.use(bodyParser.urlencoded())
 app.use(bodyParser.json())
@@ -276,6 +369,37 @@ app.post('/updateLayer', (req,res) => {
     });
 
 })
+
+//根据图层id查询一个要素图层的所有字段
+app.get('/fields',(req,res) => {
+    
+    co(function* () {
+        let fields = yield BaseLayerField.findAll({
+            where:{
+                LayerId:{
+                    [Op.eq]: req.query.id
+                }
+            }
+        })
+
+
+        res.send(fields)
+
+        
+    }).catch(function (e) {
+        console.log(e);
+    });
+
+
+
+})
+
+
+
+
+
+
+
 
 
 
