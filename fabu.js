@@ -35,6 +35,7 @@ sequelize
 
 
 
+
 const BaseMapLayer = sequelize.define('BaseMapLayer', {
     Id:
         {
@@ -260,6 +261,24 @@ app.all('*', function (req, res, next) {
 });
 
 
+//根据权限获取所有图层
+app.get('/myLayers',(req,res) => {
+
+    co(function* () {
+        let myLayers = yield BaseMapLayer.findAll()
+
+        myLayers.forEach(element => {
+            element = element.get({ plain: true })
+        });
+
+        res.send(myLayers)
+    }).catch(function (e) {
+        console.log(e);
+    });
+
+})
+
+
 //用于前台生成服务树状图
 app.get('/layersForTree',(req,res) => {
 
@@ -399,7 +418,7 @@ app.get('/fields',(req,res) => {
 app.get('/yesno',function(req,res) {
     res.send(JSON.stringify([
         {value: 1,text: '是'},
-        {value: 0,text: '-'}
+        {value: 0,text: '--'}
     ]))
 })
 
