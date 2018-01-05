@@ -1,9 +1,13 @@
+const baseLayerField = require('./model').baseLayerField
+const baseMapLayer = require('./model').baseMapLayer
+const router = require('./router')
+
 const express = require('express')
-let app = express()
+const app = express()
 const bodyParser = require('body-parser')
-let jsonParser = bodyParser.json()
-let urlencodedParser = bodyParser.urlencoded({ extended: false })
-let moment = require('moment')
+const jsonParser = bodyParser.json()
+const urlencodedParser = bodyParser.urlencoded()
+
 
 const Sequelize = require('sequelize');
 const sequelize = new Sequelize('Silverlight_NETDA', 'sa', 'Luoyuxiang61.', {
@@ -19,7 +23,6 @@ const sequelize = new Sequelize('Silverlight_NETDA', 'sa', 'Luoyuxiang61.', {
 });
 const Op = Sequelize.Op;
 
-let co = require('co')
 
 
 
@@ -31,224 +34,22 @@ sequelize
     .catch(err => {
         console.error('Unable to connect to the database:', err);
     });
-
-
-
-
-
-const BaseMapLayer = sequelize.define('BaseMapLayer', {
-    Id:
-        {
-            type: 'INT',
-            allowNull: false,
-            defaultValue: null,
-            primaryKey: true,
-            foreignKey: [Object]
-        },
-    ParentId:
-        {
-            type: 'INT',
-            allowNull: true,
-            defaultValue: null,
-            primaryKey: false
-        },
-    LayerName:
-        {
-            type: 'NletCHAR',
-            allowNull: true,
-            defaultValue: null,
-            primaryKey: false
-        },
-    DisplayName:
-        {
-            type: 'NletCHAR',
-            allowNull: true,
-            defaultValue: null,
-            primaryKey: false
-        },
-    ServiceUrl:
-        {
-            type: 'NletCHAR',
-            allowNull: true,
-            defaultValue: null,
-            primaryKey: false
-        },
-    LayerType:
-        {
-            type: 'NletCHAR',
-            allowNull: true,
-            defaultValue: null,
-            primaryKey: false
-        },
-    TokenUserName:
-        {
-            type: 'NletCHAR',
-            allowNull: true,
-            defaultValue: null,
-            primaryKey: false
-        },
-    TokenPassword:
-        {
-            type: 'NletCHAR',
-            allowNull: true,
-            defaultValue: null,
-            primaryKey: false
-        },
-    TokenURL:
-        {
-            type: 'NletCHAR',
-            allowNull: true,
-            defaultValue: null,
-            primaryKey: false
-        },
-    IsVisble:
-        {
-            type: 'NletCHAR',
-            allowNull: true,
-            defaultValue: null,
-            primaryKey: false
-        },
-    Opacity:
-        {
-            type: 'DECIMAL',
-            allowNull: true,
-            defaultValue: null,
-            primaryKey: false
-        },
-    SortCode:
-        {
-            type: 'INT',
-            allowNull: true,
-            defaultValue: null,
-            primaryKey: false
-        },
-    IsLegend:
-        {
-            type: 'INT',
-            allowNull: true,
-            defaultValue: null,
-            primaryKey: false
-        },
-    CacheName:
-        {
-            type: 'NletCHAR',
-            allowNull: true,
-            defaultValue: null,
-            primaryKey: false
-        },
-    MobileServiceUrl:
-        {
-            type: 'NletCHAR',
-            allowNull: true,
-            defaultValue: null,
-            primaryKey: false
-        },
-    IsShowInMobile:
-        {
-            type: 'INT',
-            allowNull: true,
-            defaultValue: null,
-            primaryKey: false
-        }
-},
+    
+const BaseMapLayer = sequelize.define('BaseMapLayer', baseMapLayer,
     {
         tableName: 'BaseMapLayer',
         paranoid: true,
         timestamps:false
     })
 
-const BaseLayerField = sequelize.define('BaseLayerField', {
-    Id:
-        {
-            type: 'INT',
-            allowNull: false,
-            defaultValue: null,
-            primaryKey: true,
-            foreignKey: [Object]
-        },
-    FieldName:
-        {
-            type: 'NVARCHAR',
-            allowNull: true,
-            defaultValue: null,
-            primaryKey: false
-        },
-    Alias:
-        {
-            type: 'NVARCHAR',
-            allowNull: true,
-            defaultValue: null,
-            primaryKey: false
-        },
-    DisplayName:
-        {
-            type: 'NVARCHAR',
-            allowNull: true,
-            defaultValue: null,
-            primaryKey: false
-        },
-    IsDisplay:
-        {
-            type: 'INT',
-            allowNull: true,
-            defaultValue: null,
-            primaryKey: false
-        },
-    IsSearch:
-        {
-            type: 'INT',
-            allowNull: true,
-            defaultValue: null,
-            primaryKey: false
-        },
-    UnitName:
-        {
-            type: 'NVARCHAR',
-            allowNull: true,
-            defaultValue: null,
-            primaryKey: false
-        },
-    IsShowMuFormSquareMeters:
-        {
-            type: 'INT',
-            allowNull: true,
-            defaultValue: null,
-            primaryKey: false
-        },
-    LayerId:
-        {
-            type: 'INT',
-            allowNull: true,
-            defaultValue: null,
-            primaryKey: false
-        },
-    LayerName:
-        {
-            type: 'NVARCHAR',
-            allowNull: true,
-            defaultValue: null,
-            primaryKey: false
-        },
-    SortCode:
-        {
-            type: 'INT',
-            allowNull: true,
-            defaultValue: null,
-            primaryKey: false
-        },
-    IsLabel:
-        {
-            type: 'INT',
-            allowNull: true,
-            defaultValue: null,
-            primaryKey: false,
-            
-        }
-},
+const BaseLayerField = sequelize.define('BaseLayerField', baseLayerField ,
 {
     tableName:'BaseLayerField',
     timestamps: false
 })
+
+module.exports.bm = BaseMapLayer
+module.exports.bf = BaseLayerField
 
 
 app.use(bodyParser.urlencoded())
