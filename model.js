@@ -203,6 +203,18 @@ module.exports.baseMapLayer = {
         }
 }
 
+module.exports.user = {
+    Id: {
+
+    },
+    UserName: {
+
+    },
+    Password: {
+
+    }
+}
+
 
 
 
