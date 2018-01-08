@@ -1,5 +1,5 @@
-const BaseMapLayer = require('./db').bm
-const BaseLayerField = require('./db').bf
+const BaseMapLayer = require('./db').baseMapLayer
+const BaseLayerField = require('./db').baseLayerField
 const Op = require('sequelize').Op
 const co = require('co')
 
@@ -19,7 +19,9 @@ let route = function (app) {
       let myLayers = yield BaseMapLayer.findAll()
 
       myLayers.forEach(element => {
-        element = element.get({ plain: true })
+        element = element.get({
+          plain: true
+        })
       });
 
       res.send(myLayers)
@@ -90,6 +92,28 @@ let route = function (app) {
 
   })
 
+  app.post('/addLayer', (req, res) => {
+
+    console.log(req.body)
+    res.send(req.body)
+
+    co(function* () {
+      let oneLayer = yield BaseMapLayer.update(change, {
+        where: {
+          Id: {
+            [Op.eq]: req.body.pk
+          }
+        }
+      })
+
+
+      res.send(oneLayer)
+    }).catch(function (e) {
+      console.log(e);
+    });
+
+  })
+
 
   //修改图层属性
   app.post('/updateLayer', (req, res) => {
@@ -103,20 +127,20 @@ let route = function (app) {
 
     if (req.body.name == 'LayerType') {
       switch (change[req.body.name]) {
-      case '0':
-        change[req.body.name] = 'GroupLayer';
-        break;
-      case '1':
-        change[req.body.name] = 'TiledService';
-        break;
-      case '2':
-        change[req.body.name] = 'FeatureLayer';
-        break;
-      case '3':
-        change[req.body.name] = 'GeometryService';
-        break;
-      default:
-        console.log('发生错误！')
+        case '0':
+          change[req.body.name] = 'GroupLayer';
+          break;
+        case '1':
+          change[req.body.name] = 'TiledService';
+          break;
+        case '2':
+          change[req.body.name] = 'FeatureLayer';
+          break;
+        case '3':
+          change[req.body.name] = 'GeometryService';
+          break;
+        default:
+          console.log('发生错误！')
       }
     }
 
@@ -164,28 +188,58 @@ let route = function (app) {
 
   //表格编辑需要的数据源
   app.get('/yesno', function (req, res) {
-    res.send(JSON.stringify([
-      { value: 1, text: '是' },
-      { value: 0, text: '--' }
+    res.send(JSON.stringify([{
+        value: 1,
+        text: '是'
+      },
+      {
+        value: 0,
+        text: '--'
+      }
     ]))
   })
 
   app.get('/layerType', (req, res) => {
-    res.send(JSON.stringify([
-      { value: 0, text: 'GroupLayer' },
-      { value: 1, text: 'TiledService' },
-      { value: 2, text: 'FeatureLayer' },
-      { value: 3, text: 'GeometryService' },
+    res.send(JSON.stringify([{
+        value: 0,
+        text: 'GroupLayer'
+      },
+      {
+        value: 1,
+        text: 'TiledService'
+      },
+      {
+        value: 2,
+        text: 'FeatureLayer'
+      },
+      {
+        value: 3,
+        text: 'GeometryService'
+      },
     ]))
   })
 
   app.get('/unitName', (req, res) => {
-    res.send(JSON.stringify([
-      { value: 0, text: '米' },
-      { value: 1, text: '千米' },
-      { value: 2, text: '平方米' },
-      { value: 3, text: '平方千米' },
-      { value: 4, text: '' },
+    res.send(JSON.stringify([{
+        value: 0,
+        text: '米'
+      },
+      {
+        value: 1,
+        text: '千米'
+      },
+      {
+        value: 2,
+        text: '平方米'
+      },
+      {
+        value: 3,
+        text: '平方千米'
+      },
+      {
+        value: 4,
+        text: ''
+      },
     ]))
   })
 }

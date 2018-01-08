@@ -1,21 +1,21 @@
 let {
-  baseMapLayer,
-  baseLayerField,
-  user,
-  group
+    baseMapLayer,
+    baseLayerField,
+    user,
+    group
 } = require('./model')
 
 const Sequelize = require('sequelize')
 const sequelize = new Sequelize('Fabu', 'sa', 'Luoyuxiang61.', {
-  host: 'localhost',
-  dialect: 'mssql',
-  pool: {
-    max: 5,
-    min: 0,
-    acquire: 30000,
-    idle: 10000
-  },
-  timezone: '+08:00'
+    host: 'localhost',
+    dialect: 'mssql',
+    pool: {
+        max: 5,
+        min: 0,
+        acquire: 30000,
+        idle: 10000
+    },
+    timezone: '+08:00'
 })
 
 
@@ -36,18 +36,18 @@ let User = sequelize.define('User', user)
 
 
 BaseMapLayer.belongsToMany(Group, {
-  through: LayerGroup
+    through: LayerGroup
 })
 Group.belongsToMany(BaseMapLayer, {
-  through: LayerGroup
+    through: LayerGroup
 })
 
 BaseLayerField.belongsToMany(Group, {
-  through: FieldGroup
+    through: FieldGroup
 })
 
 Group.belongsToMany(BaseLayerField, {
-  through: FieldGroup
+    through: FieldGroup
 })
 
 
@@ -56,12 +56,11 @@ User.belongsTo(Group)
 
 
 
-// sequelize.sync({
-//   force: true
-// })
+sequelize.sync({
+    force: true
+})
 
 module.exports.baseMapLayer = BaseMapLayer
 module.exports.baseLayerField = BaseLayerField
 module.exports.group = Group
 module.exports.user = User
-module.exports.sql = sequelize

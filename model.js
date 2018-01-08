@@ -1,239 +1,107 @@
-module.exports.baseLayerField = {
-  Id:
-  {
-    type: 'INT',
-    allowNull: false,
-    defaultValue: null,
-    primaryKey: true,
-  },
-  FieldName:
-  {
-    type: 'NVARCHAR(255)',
-    allowNull: true,
-    defaultValue: null,
-    primaryKey: false
-  },
-  Alias:
-  {
-    type: 'NVARCHAR(255)',
-    allowNull: true,
-    defaultValue: null,
-    primaryKey: false
-  },
-  DisplayName:
-  {
-    type: 'NVARCHAR(255)',
-    allowNull: true,
-    defaultValue: null,
-    primaryKey: false
-  },
-  IsDisplay:
-  {
-    type: 'INT',
-    allowNull: true,
-    defaultValue: null,
-    primaryKey: false
-  },
-  IsSearch:
-  {
-    type: 'INT',
-    allowNull: true,
-    defaultValue: null,
-    primaryKey: false
-  },
-  UnitName:
-  {
-    type: 'NVARCHAR(255)',
-    allowNull: true,
-    defaultValue: null,
-    primaryKey: false
-  },
-  IsShowMuFormSquareMeters:
-  {
-    type: 'INT',
-    allowNull: true,
-    defaultValue: null,
-    primaryKey: false
-  },
-  LayerId:
-  {
-    type: 'INT',
-    allowNull: true,
-    defaultValue: null,
-    primaryKey: false
-  },
-  LayerName:
-  {
-    type: 'NVARCHAR(255)',
-    allowNull: true,
-    defaultValue: null,
-    primaryKey: false
-  },
-  SortCode:
-  {
-    type: 'INT',
-    allowNull: true,
-    defaultValue: null,
-    primaryKey: false
-  },
-  IsLabel:
-  {
-    type: 'INT',
-    allowNull: true,
-    defaultValue: null,
-    primaryKey: false,
+const Sequelize = require('sequelize')
 
+module.exports.baseLayerField = {
+
+  FieldName: {
+    type: Sequelize.STRING
+  },
+  Alias: {
+    type: Sequelize.STRING
+  },
+  DisplayName: {
+    type: Sequelize.STRING
+  },
+  IsDisplay: {
+    type: Sequelize.INTEGER
+  },
+  IsSearch: {
+    type: Sequelize.INTEGER
+  },
+  UnitName: {
+    type: Sequelize.STRING
+  },
+  IsShowMuFormSquareMeters: {
+    type: Sequelize.INTEGER
+  },
+  LayerId: {
+    type: Sequelize.INTEGER
+  },
+  LayerName: {
+    type: Sequelize.STRING
+  },
+  SortCode: {
+    type: Sequelize.INTEGER
+  },
+  IsLabel: {
+    type: Sequelize.INTEGER
   }
 }
 
 module.exports.baseMapLayer = {
-  Id:
-  {
-    type: 'INT',
-    allowNull: false,
-    defaultValue: null,
+  Id: {
+    type: Sequelize.INTEGER,
     primaryKey: true,
+    allowNull: false
   },
-  ParentId:
-  {
-    type: 'INT',
-    allowNull: true,
-    defaultValue: null,
-    primaryKey: false
+  ParentId: {
+    type: Sequelize.INTEGER,
   },
-  LayerName:
-  {
-    type: 'NVARCHAR(255)',
-    allowNull: true,
-    defaultValue: null,
-    primaryKey: false
+  LayerName: {
+    type: Sequelize.STRING,
   },
-  DisplayName:
-  {
-    type: 'NVARCHAR(255)',
-    allowNull: true,
-    defaultValue: null,
-    primaryKey: false
+  DisplayName: {
+    type: Sequelize.STRING,
   },
-  ServiceUrl:
-  {
-    type: 'NVARCHAR(255)',
-    allowNull: true,
-    defaultValue: null,
-    primaryKey: false
+  ServiceUrl: {
+    type: Sequelize.STRING,
   },
-  LayerType:
-  {
-    type: 'NVARCHAR(255)',
-    allowNull: true,
-    defaultValue: null,
-    primaryKey: false
+  LayerType: {
+    type: Sequelize.STRING,
   },
-  TokenUserName:
-  {
-    type: 'NVARCHAR(255)',
-    allowNull: true,
-    defaultValue: null,
-    primaryKey: false
+  TokenUserName: {
+    type: Sequelize.STRING,
   },
-  TokenPassword:
-  {
-    type: 'NVARCHAR(255)',
-    allowNull: true,
-    defaultValue: null,
-    primaryKey: false
+  TokenPassword: {
+    type: Sequelize.STRING,
   },
-  TokenURL:
-  {
-    type: 'NVARCHAR(255)',
-    allowNull: true,
-    defaultValue: null,
-    primaryKey: false
+  TokenURL: {
+    type: Sequelize.STRING,
   },
-  IsVisble:
-  {
-    type: 'NVARCHAR(255)',
-    allowNull: true,
-    defaultValue: null,
-    primaryKey: false
+  IsVisble: {
+    type: Sequelize.STRING,
   },
-  Opacity:
-  {
-    type: 'DECIMAL',
-    allowNull: true,
-    defaultValue: null,
-    primaryKey: false
+  Opacity: {
+    type: Sequelize.DECIMAL(18, 2),
   },
-  SortCode:
-  {
-    type: 'INT',
-    allowNull: true,
-    defaultValue: null,
-    primaryKey: false
+  SortCode: {
+    type: Sequelize.INTEGER,
   },
-  IsLegend:
-  {
-    type: 'INT',
-    allowNull: true,
-    defaultValue: null,
-    primaryKey: false
+  IsLegend: {
+    type: Sequelize.INTEGER,
   },
-  CacheName:
-  {
-    type: 'NVARCHAR(255)',
-    allowNull: true,
-    defaultValue: null,
-    primaryKey: false
+  CacheName: {
+    type: Sequelize.STRING,
   },
-  MobileServiceUrl:
-  {
-    type: 'NVARCHAR(255)',
-    allowNull: true,
-    defaultValue: null,
-    primaryKey: false
+  MobileServiceUrl: {
+    type: Sequelize.STRING,
   },
-  IsShowInMobile:
-  {
-    type: 'INT',
-    allowNull: true,
-    defaultValue: null,
-    primaryKey: false
+  IsShowInMobile: {
+    type: Sequelize.INTEGER,
   }
 }
 
 module.exports.user = {
-  Id: {
-    type: 'INT',
-    allowNull: false,
-    defaultValue: null,
-    primaryKey: true,
-  },
   UserName: {
-    type: 'NVARCHAR(255)',
-    allowNull: false,
-    defaultValue: null,
-    primaryKey: true,
+    type: Sequelize.STRING,
   },
   Password: {
-    type: 'NVARCHAR(255)',
-    allowNull: false,
-    defaultValue: null,
-    primaryKey: true,
+    type: Sequelize.STRING,
   }
 }
 
 module.exports.group = {
-  Id: {
-    type: 'INT',
-    allowNull: false,
-    defaultValue: null,
-    primaryKey: true,
-  },
   name: {
-    type: 'NVARCHAR(255)',
-    allowNull: false,
-    defaultValue: null,
-    primaryKey: true,
+    type: Sequelize.STRING,
   }
 }
 
