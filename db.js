@@ -35,6 +35,8 @@ let User = sequelize.define('User', user)
 
 
 
+
+
 BaseMapLayer.belongsToMany(Group, {
   through: LayerGroup
 })
@@ -53,6 +55,10 @@ Group.belongsToMany(BaseLayerField, {
 
 Group.hasMany(User)
 User.belongsTo(Group)
+
+
+BaseMapLayer.hasMany(BaseLayerField)
+BaseLayerField.belongsTo(BaseMapLayer)
 
 
 

@@ -53,9 +53,33 @@ let route = function (app) {
   //添加一个图层的字段信息到数据库
   app.post('/addFields', (req, res) => {
 
+    co(function* () {
 
-    console.log(req.body)
-    res.send('111111')
+
+      let fl = yield BaseMapLayer.find({
+        where: {
+          Id: {
+            [Op.eq]: req.body.id
+          }
+        }
+      })
+
+      let fields = JSON.parse(req.body.fields)
+
+      fields.forEach(element => {
+        let ele = {}
+        ele.FieldName = element.name;
+        ele.Alias = element.alias;
+        ele.DisplayName = element.alias;
+
+        fl.createBaseLayerField(ele)
+      });
+
+      res.send('1111')
+    }).catch(function (e) {
+      console.log(e);
+    });
+
 
 
   })
@@ -124,8 +148,9 @@ let route = function (app) {
 
   app.post('/addLayer', (req, res) => {
 
-    res.send('add')
-
+    req.body.forEach(e => {
+      BaseMapLayer.create(e)
+    })
 
   })
 
@@ -184,7 +209,7 @@ let route = function (app) {
     co(function* () {
       let fields = yield BaseLayerField.findAll({
         where: {
-          LayerId: {
+          BaseMapLayerId: {
             [Op.eq]: req.query.id
           }
         }
