@@ -32,6 +32,36 @@ let route = function (app) {
   })
 
 
+  //获取所有要素图层
+  app.get('/featureLayers', (req, res) => {
+
+    co(function* () {
+      let featureLayers = yield BaseMapLayer.findAll({
+        where: {
+          LayerType: {
+            [Op.eq]: 'FeatureLayer'
+          }
+        }
+      })
+
+      res.send(featureLayers)
+    }).catch(function (e) {
+      console.log(e);
+    });
+  })
+
+  //添加一个图层的字段信息到数据库
+  app.post('/addFields', (req, res) => {
+
+
+    console.log(req.body)
+    res.send('111111')
+
+
+  })
+
+
+
   //用于前台生成服务树状图
   app.get('/layersForTree', (req, res) => {
 
