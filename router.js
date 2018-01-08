@@ -94,8 +94,7 @@ let route = function (app) {
 
   app.post('/addLayer', (req, res) => {
 
-    console.log(req.body)
-    res.send(req.body)
+    res.send('add')
 
 
   })
