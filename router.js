@@ -97,23 +97,8 @@ let route = function (app) {
     console.log(req.body)
     res.send(req.body)
 
-    co(function* () {
-      let oneLayer = yield BaseMapLayer.update(change, {
-        where: {
-          Id: {
-            [Op.eq]: req.body.pk
-          }
-        }
-      })
-
-
-      res.send(oneLayer)
-    }).catch(function (e) {
-      console.log(e);
-    });
 
   })
-
 
   //修改图层属性
   app.post('/updateLayer', (req, res) => {
