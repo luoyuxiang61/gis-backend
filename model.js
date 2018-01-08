@@ -12,10 +12,12 @@ module.exports.baseLayerField = {
     type: Sequelize.STRING
   },
   IsDisplay: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
+    defaultValue: 1
   },
   IsSearch: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
+    defaultValue: 1
   },
   UnitName: {
     type: Sequelize.STRING
@@ -33,7 +35,8 @@ module.exports.baseLayerField = {
     type: Sequelize.INTEGER
   },
   IsLabel: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
+    defaultValue: 1
   }
 }
 
