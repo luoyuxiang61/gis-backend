@@ -23,7 +23,8 @@ module.exports.baseLayerField = {
     type: Sequelize.STRING
   },
   IsShowMuFormSquareMeters: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
+    defaultValue: 0
   },
   LayerId: {
     type: Sequelize.INTEGER
@@ -32,7 +33,8 @@ module.exports.baseLayerField = {
     type: Sequelize.STRING
   },
   SortCode: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
+    defaultValue: 0
   },
   IsLabel: {
     type: Sequelize.INTEGER,
@@ -47,68 +49,83 @@ module.exports.baseMapLayer = {
     allowNull: false
   },
   ParentId: {
-    type: Sequelize.INTEGER,
+    type: Sequelize.INTEGER
   },
   LayerName: {
-    type: Sequelize.STRING,
+    type: Sequelize.STRING
   },
   DisplayName: {
-    type: Sequelize.STRING,
+    type: Sequelize.STRING
   },
   ServiceUrl: {
-    type: Sequelize.STRING,
+    type: Sequelize.STRING
   },
   LayerType: {
-    type: Sequelize.STRING,
+    type: Sequelize.STRING
   },
   TokenUserName: {
-    type: Sequelize.STRING,
+    type: Sequelize.STRING
   },
   TokenPassword: {
-    type: Sequelize.STRING,
+    type: Sequelize.STRING
   },
   TokenURL: {
-    type: Sequelize.STRING,
+    type: Sequelize.STRING
   },
   IsVisble: {
     type: Sequelize.STRING,
+    defaultValue: 1
   },
   Opacity: {
     type: Sequelize.DECIMAL(18, 2),
+    defaultValue: 1.0
   },
   SortCode: {
-    type: Sequelize.INTEGER,
+    type: Sequelize.INTEGER
   },
   IsLegend: {
     type: Sequelize.INTEGER,
+    defaultValue: 0
   },
   CacheName: {
-    type: Sequelize.STRING,
+    type: Sequelize.STRING
   },
   MobileServiceUrl: {
-    type: Sequelize.STRING,
+    type: Sequelize.STRING
   },
   IsShowInMobile: {
     type: Sequelize.INTEGER,
+    defaultValue: 1
   }
 }
 
 module.exports.user = {
   UserName: {
-    type: Sequelize.STRING,
+    type: Sequelize.STRING
   },
   Password: {
-    type: Sequelize.STRING,
+    type: Sequelize.STRING
   }
 }
 
 module.exports.group = {
   name: {
-    type: Sequelize.STRING,
+    type: Sequelize.STRING
   }
 }
 
+module.exports.bookmark = {
+  name: {
+    type: Sequelize.STRING
+  },
+  x: {
+    type: Sequelize.DECIMAL(6, 2)
+  },
+  y: {
+    type: Sequelize.DECIMAL(6, 2)
+  }
 
+}
 
 
 

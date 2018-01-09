@@ -64,16 +64,22 @@ let route = function (app) {
         }
       })
 
-      let fields = JSON.parse(req.body.fields)
+      let fields = yield fl.getBaseLayerFields()
 
-      fields.forEach(element => {
-        let ele = {}
-        ele.FieldName = element.name;
-        ele.Alias = element.alias;
-        ele.DisplayName = element.alias;
+      if (fields.length == 0) {
+        fields = JSON.parse(req.body.fields)
+        fields.forEach((element, index) => {
+          let ele = {}
+          ele.FieldName = element.name;
+          ele.Alias = element.alias;
+          ele.DisplayName = element.alias;
+          ele.SortCode = index + 1;
+          fl.createBaseLayerField(ele)
+        });
+      }
 
-        fl.createBaseLayerField(ele)
-      });
+
+
 
       res.send('1111')
     }).catch(function (e) {
@@ -162,8 +168,6 @@ let route = function (app) {
     let change = {}
     change[req.body.name] = req.body.value
 
-    console.log(change);
-
     if (req.body.name == 'LayerType') {
       switch (change[req.body.name]) {
         case '0':
@@ -179,11 +183,10 @@ let route = function (app) {
           change[req.body.name] = 'GeometryService';
           break;
         default:
-          console.log('发生错误！')
+          console.log('发生错误！');
+          break;
       }
     }
-
-    console.log(change);
 
 
     co(function* () {
@@ -214,15 +217,23 @@ let route = function (app) {
           }
         }
       })
-
-
       res.send(fields)
-
-
     }).catch(function (e) {
       console.log(e);
     });
   })
+
+  //修改一个字段
+  app.post('/updateField', (req, res) => {
+
+
+    console.log(req.body)
+
+
+
+
+  })
+
 
 
   //表格编辑需要的数据源
@@ -277,7 +288,7 @@ let route = function (app) {
       },
       {
         value: 4,
-        text: ''
+        text: '--'
       },
     ]))
   })

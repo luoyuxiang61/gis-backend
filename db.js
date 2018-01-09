@@ -2,7 +2,8 @@ let {
   baseMapLayer,
   baseLayerField,
   user,
-  group
+  group,
+  bookmark
 } = require('./model')
 
 const Sequelize = require('sequelize')
@@ -30,7 +31,7 @@ let FieldGroup = sequelize.define('FieldGroup')
 
 let User = sequelize.define('User', user)
 
-
+let Bookmark = sequelize.define('Bookmark', bookmark)
 
 
 
@@ -61,10 +62,14 @@ BaseMapLayer.hasMany(BaseLayerField)
 BaseLayerField.belongsTo(BaseMapLayer)
 
 
+User.hasMany(Bookmark)
+Bookmark.belongsTo(User)
 
 // sequelize.sync({
 //   force: true
 // })
+
+
 
 module.exports.baseMapLayer = BaseMapLayer
 module.exports.baseLayerField = BaseLayerField
