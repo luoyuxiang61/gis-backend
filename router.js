@@ -227,7 +227,10 @@ let route = function (app) {
   app.post('/updateField', (req, res) => {
 
 
-    console.log(req.body)
+    let change = {}
+    change[req.body.name] = req.body.value
+
+    console.log(change)
 
 
 
