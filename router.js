@@ -1,5 +1,6 @@
 const BaseMapLayer = require('./db').baseMapLayer
 const BaseLayerField = require('./db').baseLayerField
+const User = require('./db').user
 const Op = require('sequelize').Op
 const co = require('co')
 
@@ -10,6 +11,43 @@ let route = function (app) {
     res.header("Access-Control-Allow-Origin", "*");
     next();
   });
+
+
+  //登录
+  app.post('/login', (req, res) => {
+
+    co(function* () {
+      let user = yield User.find({
+        where: {
+          UserName: {
+            [Op.eq]: req.body.userName
+          },
+          Password: {
+            [Op.eq]: req.body.password
+          }
+        }
+      })
+
+      res.send(user)
+
+
+    }).catch(function (e) {
+      console.log(e);
+    });
+
+
+
+
+
+  })
+
+
+
+
+
+
+
+
 
 
   //根据权限获取所有图层
