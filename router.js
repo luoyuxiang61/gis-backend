@@ -35,7 +35,17 @@ let route = function (app) {
       console.log(e);
     });
 
+  })
 
+
+  //新建用户
+  app.post('/register', (req, res) => {
+    let user = {}
+    user.UserName = req.body.userName
+    user.Password = req.body.password
+
+    User.create(user)
+    res.send('ok')
 
 
 
