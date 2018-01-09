@@ -1,6 +1,3 @@
 let User = require('./db').user
-
-User.create({
-    UserName: 'lyx',
-    Password: '123456'
-})
+let Group = require('./db').group
+let md5 = require('blueimp-md5')
