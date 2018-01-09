@@ -250,6 +250,7 @@ let route = function (app) {
       res.send(oneLayer)
     }).catch(function (e) {
       console.log(e);
+      res.send(['err'])
     });
 
   })
@@ -275,13 +276,45 @@ let route = function (app) {
   app.post('/updateField', (req, res) => {
 
 
-    let change = {}
-    change[req.body.name] = req.body.value
 
-    console.log(change)
+    co(function* () {
+      let change = {}
+      change[req.body.name] = req.body.value
 
+      if (req.body.name == 'UnitName') {
+        switch (req.body.value) {
+          case '0':
+            change[req.body.name] = '米';
+            break;
+          case '1':
+            change[req.body.name] = '千米';
+            break;
+          case '2':
+            change[req.body.name] = '平方米';
+            break;
+          case '3':
+            change[req.body.name] = '平方千米';
+            break;
+          case '4':
+            change[req.body.name] = '--';
+            break;
+        }
 
+      }
 
+      let oneField = yield BaseLayerField.update(change, {
+        where: {
+          id: {
+            [Op.eq]: req.body.pk
+          }
+        }
+      })
+
+      res.send(oneField)
+    }).catch(function (e) {
+      console.log(e);
+      res.send('err')
+    });
 
   })
 
