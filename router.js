@@ -143,7 +143,11 @@ let route = function (app) {
 
 
   //用于前台生成服务树状图
-  app.get('/layersForTree', (req, res) => {
+  app.post('/layersForTree', (req, res) => {
+
+
+    let group = req.body.group
+    console.log(group)
 
     co(function* () {
       let layersForTree = [];
