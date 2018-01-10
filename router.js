@@ -1,5 +1,6 @@
 const BaseMapLayer = require('./db').baseMapLayer
 const BaseLayerField = require('./db').baseLayerField
+const Group = require('./db').group
 const User = require('./db').user
 const Op = require('sequelize').Op
 const co = require('co')
@@ -25,10 +26,11 @@ let route = function (app) {
           Password: {
             [Op.eq]: req.body.password
           }
-        }
+        },
+        include: [Group]
       })
 
-      res.send(user)
+      res.send(JSON.stringify(user))
 
 
     }).catch(function (e) {
