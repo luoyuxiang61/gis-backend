@@ -31,8 +31,3 @@ co(function* () {
 }).catch(function (e) {
     console.log(e);
 });
-
-
-
-
-console.log(md5('admin'))
