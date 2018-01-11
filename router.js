@@ -56,9 +56,11 @@ let route = function (app) {
   app.post('/addBookmark', (req, res) => {
 
     let mark = req.body
-
-    console.log('******************');
-    console.log(mark)
+    mark.wkid = parseInt(mark.wkid)
+    mark.xmin = parseFloat(mark.xmin)
+    mark.ymin = parseFloat(mark.ymin)
+    mark.xmax = parseFloat(mark.xmax)
+    mark.ymax = parseFloat(mark.ymax)
 
     co(function* () {
       let bookmark = yield Bookmark.create(mark)
@@ -69,7 +71,22 @@ let route = function (app) {
       console.log(e);
     });
 
+  })
 
+
+  //获取某用户的所有书签
+  app.get('/bookmarks', (req, res) => {
+
+    console.log(req.query.userId);
+
+    co(function* () {
+      let bookmarks = yield Bookmark.findAll()
+
+      res.send(bookmarks)
+
+    }).catch(function (e) {
+      console.log(e);
+    });
 
   })
 
