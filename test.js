@@ -15,17 +15,13 @@ co(function* () {
     console.log(JSON.stringify(users));
 
 
-    let group = yield Group.find({
-        where: {
-            name: {
-                [Op.eq]: '部门1领导组'
-            }
-        }
+    let group = yield Group.create({
+        name: '组1111111111111'
     })
 
-
-
-
+    users.forEach(element => {
+        element.setGroup(group)
+    });
 
 
 }).catch(function (e) {

@@ -118,13 +118,28 @@ module.exports.bookmark = {
   name: {
     type: Sequelize.STRING
   },
-  x: {
-    type: Sequelize.DECIMAL(6, 2)
+  xmin: {
+    type: Sequelize.DECIMAL(11, 3)
   },
-  y: {
-    type: Sequelize.DECIMAL(6, 2)
+  ymin: {
+    type: Sequelize.DECIMAL(11, 3)
+  },
+  xmax: {
+    type: Sequelize.DECIMAL(11, 3)
+  },
+  ymax: {
+    type: Sequelize.DECIMAL(11, 3)
+  },
+  wkid: {
+    type: Sequelize.INTEGER
   }
 
+}
+
+module.exports.department = {
+  name: {
+    type: Sequelize.STRING
+  }
 }
 
 
@@ -136,21 +151,5 @@ module.exports.bookmark = {
 
 
 
-// var SequelizeAuto = require('sequelize-auto')
-// var auto = new SequelizeAuto('Silverlight_NETDA', 'sa', 'Luoyuxiang61.', {
-//     host: 'localhost',
-//     dialect: 'mssql',
-//     directory: false, // prevents the program from writing to disk
-//     port: '1433',
-//     additional: {
-//         timestamps: false
-//     },
-//     tables: ['BaseLayerField']
-// })
 
-// auto.run(function (err) {
-//     if (err) throw err;
 
-//     console.log(auto.tables); // table list
-//     console.log(auto.foreignKeys); // foreign key list
-// });

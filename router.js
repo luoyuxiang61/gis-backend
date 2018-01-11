@@ -2,6 +2,7 @@ const BaseMapLayer = require('./db').baseMapLayer
 const BaseLayerField = require('./db').baseLayerField
 const Group = require('./db').group
 const User = require('./db').user
+const Bookmark = require('./db').bookmark
 const Op = require('sequelize').Op
 const co = require('co')
 
@@ -48,6 +49,25 @@ let route = function (app) {
 
     User.create(user)
     res.send('ok')
+  })
+
+
+  //增加书签
+  app.post('/addBookmark', (req, res) => {
+
+    let mark = req.body
+
+    console.log('******************');
+    console.log(mark)
+
+    co(function* () {
+      let bookmark = yield Bookmark.create(mark)
+
+      res.send(bookmark)
+
+    }).catch(function (e) {
+      console.log(e);
+    });
 
 
 
@@ -127,11 +147,7 @@ let route = function (app) {
           fl.createBaseLayerField(ele)
         });
       }
-
-
-
-
-      res.send('1111')
+      res.send('ok')
     }).catch(function (e) {
       console.log(e);
     });
@@ -329,57 +345,57 @@ let route = function (app) {
   //表格编辑需要的数据源
   app.get('/yesno', function (req, res) {
     res.send(JSON.stringify([{
-        value: 1,
-        text: '是'
-      },
-      {
-        value: 0,
-        text: '--'
-      }
+      value: 1,
+      text: '是'
+    },
+    {
+      value: 0,
+      text: '--'
+    }
     ]))
   })
 
   app.get('/layerType', (req, res) => {
     res.send(JSON.stringify([{
-        value: 0,
-        text: 'GroupLayer'
-      },
-      {
-        value: 1,
-        text: 'TiledService'
-      },
-      {
-        value: 2,
-        text: 'FeatureLayer'
-      },
-      {
-        value: 3,
-        text: 'GeometryService'
-      },
+      value: 0,
+      text: 'GroupLayer'
+    },
+    {
+      value: 1,
+      text: 'TiledService'
+    },
+    {
+      value: 2,
+      text: 'FeatureLayer'
+    },
+    {
+      value: 3,
+      text: 'GeometryService'
+    },
     ]))
   })
 
   app.get('/unitName', (req, res) => {
     res.send(JSON.stringify([{
-        value: 0,
-        text: '米'
-      },
-      {
-        value: 1,
-        text: '千米'
-      },
-      {
-        value: 2,
-        text: '平方米'
-      },
-      {
-        value: 3,
-        text: '平方千米'
-      },
-      {
-        value: 4,
-        text: '--'
-      },
+      value: 0,
+      text: '米'
+    },
+    {
+      value: 1,
+      text: '千米'
+    },
+    {
+      value: 2,
+      text: '平方米'
+    },
+    {
+      value: 3,
+      text: '平方千米'
+    },
+    {
+      value: 4,
+      text: '--'
+    },
     ]))
   })
 }

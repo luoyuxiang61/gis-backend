@@ -3,7 +3,8 @@ let {
   baseLayerField,
   user,
   group,
-  bookmark
+  bookmark,
+  department
 } = require('./model')
 
 const Sequelize = require('sequelize')
@@ -33,6 +34,8 @@ let User = sequelize.define('User', user)
 
 let Bookmark = sequelize.define('Bookmark', bookmark)
 
+let Department = sequelize.define('Department', department)
+
 
 
 
@@ -54,6 +57,10 @@ Group.belongsToMany(BaseLayerField, {
 })
 
 
+Department.hasMany(Group)
+Group.belongsTo(Department)
+
+
 Group.hasMany(User)
 User.belongsTo(Group)
 
@@ -65,9 +72,9 @@ BaseLayerField.belongsTo(BaseMapLayer)
 User.hasMany(Bookmark)
 Bookmark.belongsTo(User)
 
-// sequelize.sync({
-//   force: true
-// })
+sequelize.sync({
+  // force: true
+})
 
 
 
@@ -75,4 +82,5 @@ module.exports.baseMapLayer = BaseMapLayer
 module.exports.baseLayerField = BaseLayerField
 module.exports.group = Group
 module.exports.user = User
+module.exports.bookmark = Bookmark
 module.exports.sql = sequelize
