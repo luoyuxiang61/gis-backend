@@ -6,6 +6,46 @@ const Op = require('sequelize').Op
 const co = require('co')
 
 let fieldRoute = function (app) {
+
+    //根据权限组groupId和图层id获取该图层在该当前权限组下所拥有的字段
+    app.post('/fieldsForLayerInGroup', (req, res) => {
+
+        co(function* () {
+
+            let group = yield Group.find({
+                where: {
+                    id: {
+                        [op.eq]: req.body.groupId
+                    }
+                }
+            })
+
+            let fieldsForLayerInGroup = yield group.getBaseLayerFields({
+                where: {
+                    BaseMapLayerId: {
+                        [Op.eq]: req.body.baseMapLayerId
+                    }
+                }
+            })
+
+            res.send(fieldsForLayerInGroup)
+
+        }).catch(function (e) {
+            console.log(e);
+        });
+
+
+
+
+    })
+
+
+
+
+
+
+
+
     //添加一个图层的字段信息到数据库
     app.post('/addFields', (req, res) => {
 

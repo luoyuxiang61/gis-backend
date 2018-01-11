@@ -7,17 +7,53 @@ const co = require('co')
 
 let layerRoute = function (app) {
 
-  //根据权限组名称获取所拥有图层
-  app.get('/myLayers', (req, res) => {
+  //根据权限组groupId，返回该权限组拥有的所有图层
+  app.get('/layersForGroup', (req, res) => {
 
     co(function* () {
-      let myLayers = yield BaseMapLayer.findAll()
-      myLayers.forEach(element => {
-        element = element.get({
-          plain: true
-        })
+
+
+      let group = yield Group.find({
+        where: {
+          id: {
+            [op.eq]: req.body.groupId
+          }
+        }
+      })
+
+      let layersForGroup = []
+
+      let fathers = yield group.getBaseMapLayers({
+        where: {
+          ParentId: {
+            [Op.eq]: 0
+          }
+        }
       });
-      res.send(myLayers)
+
+      let sons = yield group.getBaseMapLayers({
+        where: {
+          ParentId: {
+            [Op.not]: 0
+          }
+        }
+      })
+
+      fathers.forEach(father => {
+        let item = {
+          father: {},
+          sons: []
+        }
+        item.father = father
+        sons.forEach(son => {
+          if (son.ParentId == father.Id) {
+            item.sons.push(son)
+          }
+        });
+        layersForGroup.push(item)
+      });
+
+      res.send(layersForGroup)
     }).catch(function (e) {
       console.log(e);
     });
@@ -48,12 +84,9 @@ let layerRoute = function (app) {
 
 
 
-  //用于前台生成服务树状图
+  //获取树状的所有图层，用于生成服务管理页面的服务目录
   app.post('/layersForTree', (req, res) => {
 
-
-    let group = req.body.group
-    console.log(group)
 
     co(function* () {
       let layersForTree = [];
