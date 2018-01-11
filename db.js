@@ -1,11 +1,11 @@
 let {
-  baseMapLayer,
   baseLayerField,
-  user,
-  group,
+  baseMapLayer,
   bookmark,
-  department
-} = require('./model')
+  department,
+  group,
+  user
+} = require('./model/models')
 
 const Sequelize = require('sequelize')
 const sequelize = new Sequelize('Fabu', 'sa', 'Luoyuxiang61.', {
@@ -83,4 +83,4 @@ module.exports.baseLayerField = BaseLayerField
 module.exports.group = Group
 module.exports.user = User
 module.exports.bookmark = Bookmark
-module.exports.sql = sequelize
+module.exports.sequelize = sequelize

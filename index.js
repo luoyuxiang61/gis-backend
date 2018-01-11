@@ -2,7 +2,8 @@ const layerRoute = require('./route/layerRoute').layerRoute
 const commonRoute = require('./route/commonRoute').commonRoute
 const fieldRoute = require('./route/fieldRoute').fieldRoute
 const resourceRoute = require('./route/resourceRoute').resourceRoute
-const sequelize = require('./db').sql
+const sequelize = require('./db').sequelize
+
 const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
