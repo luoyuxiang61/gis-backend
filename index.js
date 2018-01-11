@@ -1,4 +1,7 @@
-const router = require('./router').route
+const layerRoute = require('./route/layerRoute').layerRoute
+const commonRoute = require('./route/commonRoute').commonRoute
+const fieldRoute = require('./route/fieldRoute').fieldRoute
+const resourceRoute = require('./route/resourceRoute').resourceRoute
 const sequelize = require('./db').sql
 const express = require('express')
 const app = express()
@@ -21,7 +24,11 @@ app.use(bodyParser.urlencoded())
 app.use(bodyParser.json())
 
 
-router(app)
+
+commonRoute(app)
+layerRoute(app)
+fieldRoute(app)
+resourceRoute(app)
 
 
 app.listen(3000)
