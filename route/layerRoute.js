@@ -8,7 +8,7 @@ const co = require('co')
 let layerRoute = function (app) {
 
   //根据权限组groupId，返回该权限组拥有的所有图层
-  app.get('/layersForGroup', (req, res) => {
+  app.post('/layersForGroup', (req, res) => {
 
     co(function* () {
 
@@ -16,7 +16,7 @@ let layerRoute = function (app) {
       let group = yield Group.find({
         where: {
           id: {
-            [op.eq]: req.body.groupId
+            [Op.eq]: req.body.groupId
           }
         }
       })

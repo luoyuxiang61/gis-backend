@@ -7,8 +7,9 @@ const co = require('co')
 
 let fieldRoute = function (app) {
 
-    //根据groupId获取拥有的图层
-    app.post('/layersForGroup', (req, res) => {
+
+    //根据权限组groupId，获取该权限组拥有的所有字段
+    app.post('/fieldsForGroup', (req, res) => {
 
         co(function* () {
 
@@ -20,9 +21,9 @@ let fieldRoute = function (app) {
                 }
             })
 
-            let layersForGroup = yield group.getBaseMapLayers()
+            let fieldsForGroup = yield group.getBaseLayerFields()
 
-            res.send(layersForGroup)
+            res.send(fieldsForGroup)
 
         }).catch(function (e) {
             console.log(e);
@@ -35,20 +36,21 @@ let fieldRoute = function (app) {
 
 
 
+
     //根据权限组groupId和图层id获取该图层在该当前权限组下所拥有的字段
-    app.post('/fieldsForLayerInGroup', (req, res) => {
+    app.post('/fieldsForGroupInLayer', (req, res) => {
 
         co(function* () {
 
             let group = yield Group.find({
                 where: {
                     id: {
-                        [op.eq]: req.body.groupId
+                        [Op.eq]: req.body.groupId
                     }
                 }
             })
 
-            let fieldsForLayerInGroup = yield group.getBaseLayerFields({
+            let fieldsForGroupInLayer = yield group.getBaseLayerFields({
                 where: {
                     BaseMapLayerId: {
                         [Op.eq]: req.body.baseMapLayerId
@@ -56,14 +58,32 @@ let fieldRoute = function (app) {
                 }
             })
 
-            res.send(fieldsForLayerInGroup)
+            res.send(fieldsForGroupInLayer)
 
         }).catch(function (e) {
             console.log(e);
         });
 
+    })
 
+    app.post('/fieldsInLayer', (req, res) => {
 
+        co(function* () {
+            let baseMapLayer = yield BaseMapLayer.find({
+                where: {
+                    Id: {
+                        [Op.eq]: req.body.baseMapLayerId
+                    }
+                }
+            })
+
+            let fieldsInLayer = yield baseMapLayer.getBaseLayerFields()
+
+            res.send(fieldsInLayer)
+
+        }).catch(function (e) {
+            console.log(e);
+        });
 
     })
 
