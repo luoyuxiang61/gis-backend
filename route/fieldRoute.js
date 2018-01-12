@@ -7,6 +7,34 @@ const co = require('co')
 
 let fieldRoute = function (app) {
 
+    //根据groupId获取拥有的图层
+    app.post('/layersForGroup', (req, res) => {
+
+        co(function* () {
+
+            let group = yield Group.find({
+                where: {
+                    id: {
+                        [Op.eq]: req.body.groupId
+                    }
+                }
+            })
+
+            let layersForGroup = yield group.getBaseMapLayers()
+
+            res.send(layersForGroup)
+
+        }).catch(function (e) {
+            console.log(e);
+        });
+
+
+
+    })
+
+
+
+
     //根据权限组groupId和图层id获取该图层在该当前权限组下所拥有的字段
     app.post('/fieldsForLayerInGroup', (req, res) => {
 
