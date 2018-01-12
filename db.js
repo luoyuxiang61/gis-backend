@@ -83,4 +83,5 @@ module.exports.baseLayerField = BaseLayerField
 module.exports.group = Group
 module.exports.user = User
 module.exports.bookmark = Bookmark
+module.exports.department = Department
 module.exports.sequelize = sequelize
