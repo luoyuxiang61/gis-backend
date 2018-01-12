@@ -28,13 +28,7 @@ let fieldRoute = function (app) {
         }).catch(function (e) {
             console.log(e);
         });
-
-
-
     })
-
-
-
 
 
     //根据权限组groupId和图层id获取该图层在该当前权限组下所拥有的字段
@@ -66,6 +60,8 @@ let fieldRoute = function (app) {
 
     })
 
+
+    //根据图层ID，获取该图层的所有字段
     app.post('/fieldsInLayer', (req, res) => {
 
         co(function* () {
@@ -86,12 +82,6 @@ let fieldRoute = function (app) {
         });
 
     })
-
-
-
-
-
-
 
 
     //添加一个图层的字段信息到数据库
