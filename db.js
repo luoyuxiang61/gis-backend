@@ -8,9 +8,9 @@ let {
 } = require('./model/models')
 
 const Sequelize = require('sequelize')
-const sequelize = new Sequelize('Fabu', 'sa', 'Luoyuxiang61.', {
+const sequelize = new Sequelize('fabu', 'root', '123456', {
   host: 'localhost',
-  dialect: 'mssql',
+  dialect: 'mysql',
   pool: {
     max: 5,
     min: 0,

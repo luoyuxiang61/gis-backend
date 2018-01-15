@@ -22,7 +22,7 @@ co(function* () {
 
     grps.forEach(grp => {
 
-        // grp.setBaseMapLayers(layers)
+        grp.setBaseMapLayers(layers)
         // grp.setBaseLayerFields(fields)
         // grp.addBaseMapLayers(gls)
         // grp.addBaseMapLayers(lyrs)

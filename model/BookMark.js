@@ -4,16 +4,16 @@ module.exports = {
         type: Sequelize.STRING
     },
     xmin: {
-        type: Sequelize.DECIMAL(11, 3)
+        type: Sequelize.FLOAT
     },
     ymin: {
-        type: Sequelize.DECIMAL(11, 3)
+        type: Sequelize.FLOAT
     },
     xmax: {
-        type: Sequelize.DECIMAL(11, 3)
+        type: Sequelize.FLOAT
     },
     ymax: {
-        type: Sequelize.DECIMAL(11, 3)
+        type: Sequelize.FLOAT
     },
     wkid: {
         type: Sequelize.INTEGER

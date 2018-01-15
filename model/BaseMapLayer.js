@@ -30,11 +30,11 @@ module.exports = {
         type: Sequelize.STRING
     },
     IsVisble: {
-        type: Sequelize.STRING,
+        type: Sequelize.INTEGER,
         defaultValue: 1
     },
     Opacity: {
-        type: Sequelize.DECIMAL(18, 2),
+        type: Sequelize.FLOAT,
         defaultValue: 1.0
     },
     SortCode: {

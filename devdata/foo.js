@@ -15,15 +15,11 @@ co(function* () {
         }
     })
 
-    let g = yield Group.findAll({
-        where: {
-            id: {
-                [Op.eq]: 2
-            }
-        }
+    let g = yield Group.create({
+        name: '权限组1'
     })
 
-    u[0].setGroup(g[0])
+    u[0].setGroup(g)
 
 
 
