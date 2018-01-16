@@ -72,9 +72,9 @@ BaseLayerField.belongsTo(BaseMapLayer)
 User.hasMany(Bookmark)
 Bookmark.belongsTo(User)
 
-sequelize.sync({
-  // force: true
-})
+// sequelize.sync({
+//   // force: true
+// })
 
 
 
