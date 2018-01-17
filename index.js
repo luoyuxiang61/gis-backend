@@ -1,9 +1,9 @@
-const layerRoute = require('./route/layerRoute').layerRoute
-const commonRoute = require('./route/commonRoute').commonRoute
-const fieldRoute = require('./route/fieldRoute').fieldRoute
-const resourceRoute = require('./route/resourceRoute').resourceRoute
-const quanxianRoute = require('./route/quanxianRoute').quanxianRoute
-const sequelize = require('./db').sequelize
+const layerRoute = require('./api/layerRoute').layerRoute
+const commonRoute = require('./api/commonRoute').commonRoute
+const fieldRoute = require('./api/fieldRoute').fieldRoute
+const resourceRoute = require('./api/resourceRoute').resourceRoute
+const quanxianRoute = require('./api/quanxianRoute').quanxianRoute
+const sequelize = require('./dao/db').sequelize
 
 const express = require('express')
 const app = express()

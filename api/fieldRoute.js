@@ -1,7 +1,7 @@
-const BaseMapLayer = require('../db').baseMapLayer
-const BaseLayerField = require('../db').baseLayerField
-const Group = require('../db').group
-const User = require('../db').user
+const BaseMapLayer = require('../dao/db').baseMapLayer
+const BaseLayerField = require('../dao/db').baseLayerField
+const Group = require('../dao/db').group
+const User = require('../dao/db').user
 const Op = require('sequelize').Op
 const co = require('co')
 

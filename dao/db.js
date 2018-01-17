@@ -5,7 +5,7 @@ let {
   department,
   group,
   user
-} = require('./model/models')
+} = require('../model/models')
 
 const Sequelize = require('sequelize')
 const sequelize = new Sequelize('fabu', 'root', '123456', {
