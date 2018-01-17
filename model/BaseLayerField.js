@@ -11,11 +11,11 @@ module.exports = {
     },
     IsDisplay: {
         type: Sequelize.INTEGER,
-        defaultValue: 1
+        defaultValue: 0
     },
     IsSearch: {
         type: Sequelize.INTEGER,
-        defaultValue: 1
+        defaultValue: 0
     },
     UnitName: {
         type: Sequelize.STRING
@@ -36,6 +36,6 @@ module.exports = {
     },
     IsLabel: {
         type: Sequelize.INTEGER,
-        defaultValue: 1
+        defaultValue: 0
     }
 }

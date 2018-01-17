@@ -1,10 +1,6 @@
 const Sequelize = require('sequelize')
 module.exports = {
-    Id: {
-        type: Sequelize.INTEGER,
-        primaryKey: true,
-        allowNull: false
-    },
+
     ParentId: {
         type: Sequelize.INTEGER
     },
@@ -29,9 +25,9 @@ module.exports = {
     TokenURL: {
         type: Sequelize.STRING
     },
-    IsVisble: {
+    IsVisible: {
         type: Sequelize.INTEGER,
-        defaultValue: 1
+        defaultValue: 0
     },
     Opacity: {
         type: Sequelize.FLOAT,

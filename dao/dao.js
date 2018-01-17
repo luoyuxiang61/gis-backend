@@ -7,10 +7,19 @@ let {
   user
 } = require('../model/models')
 
+let {
+  db_host,
+  db_port,
+  db_name,
+  db_username,
+  db_password
+} = require('../config/config')
+
 const Sequelize = require('sequelize')
-const sequelize = new Sequelize('fabu', 'root', '123456', {
-  host: 'localhost',
-  dialect: 'mysql',
+const sequelize = new Sequelize(db_name, db_username, db_password, {
+  host: db_host,
+  port: db_port,
+  dialect: 'mssql',
   pool: {
     max: 5,
     min: 0,
@@ -72,9 +81,9 @@ BaseLayerField.belongsTo(BaseMapLayer)
 User.hasMany(Bookmark)
 Bookmark.belongsTo(User)
 
-// sequelize.sync({
-//   // force: true
-// })
+sequelize.sync({
+  force: true
+})
 
 
 
