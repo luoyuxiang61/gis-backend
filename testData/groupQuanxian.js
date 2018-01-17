@@ -1,8 +1,8 @@
-let User = require('../db').user
-let Group = require('../db').group
-let Department = require('../db').department
-let BaseMapLayer = require('../db').baseMapLayer
-let BaseLayerField = require('../db').baseLayerField
+let User = require('../dao/dao').user
+let Group = require('../dao/dao').group
+let Department = require('../dao/dao').department
+let BaseMapLayer = require('../dao/dao').baseMapLayer
+let BaseLayerField = require('../dao/dao').baseLayerField
 let md5 = require('blueimp-md5')
 let co = require('co')
 let Op = require('sequelize').Op
@@ -10,6 +10,8 @@ let Op = require('sequelize').Op
 
 co(function* () {
 
+
+    //给每个权限组都分配所有的图层和字段
 
     let layers = yield BaseMapLayer.findAll()
 
@@ -21,17 +23,9 @@ co(function* () {
 
 
     grps.forEach(grp => {
-
         grp.setBaseMapLayers(layers)
         grp.setBaseLayerFields(fields)
-        // grp.addBaseMapLayers(gls)
-        // grp.addBaseMapLayers(lyrs)
-        // grp.addBaseLayerFields(fields)
-
     });
-
-
-
 
 
 }).catch(function (e) {
