@@ -67,7 +67,7 @@ let fieldRoute = function (app) {
         co(function* () {
             let baseMapLayer = yield BaseMapLayer.find({
                 where: {
-                    Id: {
+                    id: {
                         [Op.eq]: req.body.baseMapLayerId
                     }
                 }
@@ -92,7 +92,7 @@ let fieldRoute = function (app) {
 
             let fl = yield BaseMapLayer.find({
                 where: {
-                    Id: {
+                    id: {
                         [Op.eq]: req.body.id
                     }
                 }

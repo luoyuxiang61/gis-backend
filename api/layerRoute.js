@@ -46,7 +46,7 @@ let layerRoute = function (app) {
         }
         item.father = father
         sons.forEach(son => {
-          if (son.ParentId == father.Id) {
+          if (son.ParentId == father.id) {
             item.sons.push(son)
           }
         });
@@ -112,7 +112,7 @@ let layerRoute = function (app) {
         }
         item.father = father
         sons.forEach(son => {
-          if (son.ParentId == father.Id) {
+          if (son.ParentId == father.id) {
             item.sons.push(son)
           }
         });
@@ -132,7 +132,7 @@ let layerRoute = function (app) {
     co(function* () {
       let oneLayer = yield BaseMapLayer.find({
         where: {
-          Id: {
+          id: {
             [Op.eq]: req.query.layerId
           }
         }
@@ -184,7 +184,7 @@ let layerRoute = function (app) {
     co(function* () {
       let oneLayer = yield BaseMapLayer.update(change, {
         where: {
-          Id: {
+          id: {
             [Op.eq]: req.body.pk
           }
         }
