@@ -39,13 +39,34 @@ let layerRoute = function (app) {
         }
       })
 
+      let sons0 = []
+
+
+      sons.forEach(element => {
+        sons0.push(element.get({ plain: true }))
+      });
+
+      let groupFields = yield group.getBaseLayerFields()
+
+
+
+
       fathers.forEach(father => {
         let item = {
           father: {},
           sons: []
         }
         item.father = father
-        sons.forEach(son => {
+        sons0.forEach(son => {
+          son.fields = []
+          groupFields.forEach(element => {
+
+            if (element.BaseMapLayerId == son.id) {
+              son.fields.push(element)
+
+            }
+          });
+
           if (son.ParentId == father.id) {
             item.sons.push(son)
           }
