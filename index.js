@@ -24,6 +24,7 @@ sequelize
 
 app.use(urlencodedParser)
 app.use(bodyParser.json())
+app.use(express.static(__dirname + '/resources'));
 
 
 

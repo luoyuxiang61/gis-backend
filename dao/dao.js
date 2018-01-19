@@ -13,7 +13,7 @@ let {
   db_name,
   db_username,
   db_password
-} = require('../config/config')
+} = require('../config')
 
 const Sequelize = require('sequelize')
 const sequelize = new Sequelize(db_name, db_username, db_password, {
