@@ -51,9 +51,11 @@ let commonRoute = function (app) {
   })
 
 
+
+
+
   //增加书签
   app.post('/addBookmark', (req, res) => {
-
     let mark = req.body
     mark.wkid = parseInt(mark.wkid)
     mark.xmin = parseFloat(mark.xmin)
@@ -61,8 +63,19 @@ let commonRoute = function (app) {
     mark.xmax = parseFloat(mark.xmax)
     mark.ymax = parseFloat(mark.ymax)
 
+    let userId = req.body.userId
+
     co(function* () {
-      let bookmark = yield Bookmark.create(mark)
+
+      let user = yield User.find({
+        where: {
+          id: {
+            [Op.eq]: userId
+          }
+        }
+      })
+
+      let bookmark = yield user.createBookmark(mark)
 
       res.send(bookmark)
 
@@ -74,12 +87,17 @@ let commonRoute = function (app) {
 
 
   //获取某用户的所有书签
-  app.get('/bookmarks', (req, res) => {
-
-    console.log(req.query.userId);
-
+  app.post('/bookmarks', (req, res) => {
     co(function* () {
-      let bookmarks = yield Bookmark.findAll()
+
+      let user = yield User.find({
+        where: {
+          id: {
+            [Op.eq]: req.body.userId
+          }
+        }
+      })
+      let bookmarks = yield user.getBookmarks()
 
       res.send(bookmarks)
 
@@ -88,6 +106,67 @@ let commonRoute = function (app) {
     });
 
   })
+
+  //删除书签
+  app.post('/removeBookmark', (req, res) => {
+
+
+    co(function* () {
+
+      var bookmark = yield Bookmark.find({
+        where: {
+          id: {
+            [Op.eq]: req.body.bookmarkId
+          }
+        }
+      })
+
+      var user = yield User.find({
+        where: {
+          id: {
+            [Op.eq]: req.body.userId
+          }
+        }
+      })
+
+      user.removeBookmark(bookmark)
+      res.send('ok')
+
+    }).catch(function (e) {
+      console.log(e);
+    });
+  })
+
+
+
+  //修改书签名
+  app.post('/editBookmark', (req, res) => {
+
+    co(function* () {
+
+      let bookmark = yield Bookmark.find({
+        where: {
+          id: {
+            [Op.eq]: req.body.bookmarkId
+          }
+        }
+      })
+
+      let change = { name: req.body.newName }
+
+      yield bookmark.update(change)
+
+      res.send('ok')
+
+    }).catch(function (e) {
+      console.log(e);
+    });
+
+
+
+
+  })
+
 
 }
 

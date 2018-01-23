@@ -3,5 +3,5 @@ module.exports = {
     db_port: 1433,
     db_name: "Fabu",
     db_username: "sa",
-    db_password: "123@abcd"
+    db_password: "Luoyuxiang61."
 }
