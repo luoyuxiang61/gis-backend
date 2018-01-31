@@ -11,8 +11,6 @@ layerRouter.use((req, res, next) => {
 });
 
 
-
-
 // 根据groupId返回该权限组拥有的所有图层
 layerRouter.get('/layersForGroup/:groupId', (req, res) => {
     let fun = async function(groupId) {
@@ -33,6 +31,14 @@ layerRouter.get('/layersForGroup/:groupId', (req, res) => {
     layersForGroup.then((value) => res.send(value))
         .catch((err) => res.send(err.toString()));
 });
+
+
+// 返回所有要素图层
+layerRouter.get('/featureLayers', (req, res) => {
+
+
+});
+
 
 module.exports = layerRouter;
 
