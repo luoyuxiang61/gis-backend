@@ -18,6 +18,7 @@
     "tedious": "^2.1.5"
   },
   "devDependencies": {
+    "babel-eslint": "^8.2.1",
     "eslint": "^4.16.0",
     "eslint-config-google": "^0.9.1"
   }

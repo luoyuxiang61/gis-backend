@@ -8,17 +8,17 @@ let {
 } = require('../model/models');
 
 let {
-  db_host,
-  db_port,
-  db_name,
-  db_username,
-  db_password,
+  dbHost,
+  dbPort,
+  dbName,
+  dbUsername,
+  dbPassword,
 } = require('../config');
 
 const Sequelize = require('sequelize');
-const sequelize = new Sequelize(db_name, db_username, db_password, {
-  host: db_host,
-  port: db_port,
+const sequelize = new Sequelize(dbName, dbUsername, dbPassword, {
+  host: dbHost,
+  port: dbPort,
   dialect: 'mssql',
   pool: {
     max: 5,

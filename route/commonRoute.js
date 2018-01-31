@@ -1,6 +1,6 @@
-const Group = require('../dao/dao').group;
-const User = require('../dao/dao').user;
-const Bookmark = require('../dao/dao').bookmark;
+const Group = require('../resource/resource').group;
+const User = require('../resource/resource').user;
+const Bookmark = require('../resource/resource').bookmark;
 const Op = require('sequelize').Op;
 const co = require('co');
 

@@ -1,9 +1,9 @@
-const BaseMapLayer = require('../dao/dao').baseMapLayer;
-const BaseLayerField = require('../dao/dao').baseLayerField;
-const Group = require('../dao/dao').group;
-const User = require('../dao/dao').user;
-const Bookmark = require('../dao/dao').bookmark;
-const Department = require('../dao/dao').department;
+const BaseMapLayer = require('../resource/resource').baseMapLayer;
+const BaseLayerField = require('../resource/resource').baseLayerField;
+const Group = require('../resource/resource').group;
+const User = require('../resource/resource').user;
+const Bookmark = require('../resource/resource').bookmark;
+const Department = require('../resource/resource').department;
 const Op = require('sequelize').Op;
 const co = require('co');
 

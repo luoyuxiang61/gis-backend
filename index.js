@@ -1,14 +1,13 @@
-const layerRoute = require('./api/layerRoute').layerRoute;
-const commonRoute = require('./api/commonRoute').commonRoute;
-const fieldRoute = require('./api/fieldRoute').fieldRoute;
-const resourceRoute = require('./api/resourceRoute').resourceRoute;
-const quanxianRoute = require('./api/quanxianRoute').quanxianRoute;
-const sequelize = require('./dao/dao').sequelize;
+const layerRoute = require('./route/layerRoute').layerRoute;
+const commonRoute = require('./route/commonRoute').commonRoute;
+const fieldRoute = require('./route/fieldRoute').fieldRoute;
+const otherRoute = require('./route/otherRoute').resourceRoute;
+const quanxianRoute = require('./route/quanxianRoute').quanxianRoute;
+const sequelize = require('./resource/resource').sequelize;
 
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
-const jsonParser = bodyParser.json();
 const urlencodedParser = bodyParser.urlencoded({extended: false});
 
 
@@ -23,13 +22,13 @@ sequelize
 
 app.use(urlencodedParser);
 app.use(bodyParser.json());
-app.use(express.static(__dirname + '/resources'));
+app.use(express.static(__dirname + '/static'));
 
 
 commonRoute(app);
 layerRoute(app);
 fieldRoute(app);
-resourceRoute(app);
+otherRoute(app);
 quanxianRoute(app);
 
 
