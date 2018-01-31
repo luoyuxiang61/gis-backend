@@ -1,9 +1,10 @@
 let http = require('http');
 
-http.get({
+let req = http.request({
     hostname: 'localhost',
     port: 3000,
     path: '/layer/featureLayers',
+    method: 'GET',
 }, (res) => {
     let data = '';
 
@@ -15,3 +16,7 @@ http.get({
         console.log(data.toString());
     });
 });
+
+req.end();
+
+
