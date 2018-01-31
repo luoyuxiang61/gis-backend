@@ -1,9 +1,9 @@
-let User = require('../dao/dao').user
-let Group = require('../dao/dao').group
-let Department = require('../dao/dao').department
-let md5 = require('blueimp-md5')
-let co = require('co')
-let Op = require('sequelize').Op
+let User = require('../dao/dao').user;
+let Group = require('../dao/dao').group;
+let Department = require('../dao/dao').department;
+let md5 = require('blueimp-md5');
+let co = require('co');
+let Op = require('sequelize').Op;
 
 
 co(function* () {
@@ -17,18 +17,13 @@ co(function* () {
     // }
 
 
-
-
-
-    //10个部门分别新建自己的4个权限组
+    // 10个部门分别新建自己的4个权限组
     // let bms = yield Department.findAll()
     // bms.forEach(element => {
     //     for (let i = 0; i < 4; i++) {
     //         element.createGroup({ name: "权限组" + i })
     //     }
     // });
-
-
 
 
     // 给用户分配第一个权限组
@@ -43,8 +38,6 @@ co(function* () {
     // });
 
 
-
-
-}).catch(function (e) {
+}).catch(function(e) {
     console.log(e);
 });

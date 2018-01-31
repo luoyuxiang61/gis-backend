@@ -1,41 +1,41 @@
-const Sequelize = require('sequelize')
+const Sequelize = require('sequelize');
 module.exports = {
     FieldName: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
     },
     Alias: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
     },
     DisplayName: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
     },
     IsDisplay: {
         type: Sequelize.INTEGER,
-        defaultValue: 0
+        defaultValue: 0,
     },
     IsSearch: {
         type: Sequelize.INTEGER,
-        defaultValue: 0
+        defaultValue: 0,
     },
     UnitName: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
     },
     IsShowMuFormSquareMeters: {
         type: Sequelize.INTEGER,
-        defaultValue: 0
+        defaultValue: 0,
     },
     LayerId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
     },
     LayerName: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
     },
     SortCode: {
         type: Sequelize.INTEGER,
-        defaultValue: 0
+        defaultValue: 0,
     },
     IsLabel: {
         type: Sequelize.INTEGER,
-        defaultValue: 0
-    }
-}
+        defaultValue: 0,
+    },
+};

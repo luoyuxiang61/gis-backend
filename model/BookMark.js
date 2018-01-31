@@ -1,22 +1,22 @@
-const Sequelize = require('sequelize')
+const Sequelize = require('sequelize');
 module.exports = {
     name: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
     },
     xmin: {
-        type: Sequelize.FLOAT
+        type: Sequelize.FLOAT,
     },
     ymin: {
-        type: Sequelize.FLOAT
+        type: Sequelize.FLOAT,
     },
     xmax: {
-        type: Sequelize.FLOAT
+        type: Sequelize.FLOAT,
     },
     ymax: {
-        type: Sequelize.FLOAT
+        type: Sequelize.FLOAT,
     },
     wkid: {
-        type: Sequelize.INTEGER
-    }
+        type: Sequelize.INTEGER,
+    },
 
-}
+};

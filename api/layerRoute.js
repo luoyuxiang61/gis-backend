@@ -1,185 +1,163 @@
-const BaseMapLayer = require('../dao/dao').baseMapLayer
-const BaseLayerField = require('../dao/dao').baseLayerField
-const Group = require('../dao/dao').group
-const User = require('../dao/dao').user
-const Op = require('sequelize').Op
-const co = require('co')
+const BaseMapLayer = require('../dao/dao').baseMapLayer;
+const BaseLayerField = require('../dao/dao').baseLayerField;
+const Group = require('../dao/dao').group;
+const User = require('../dao/dao').user;
+const Op = require('sequelize').Op;
+const co = require('co');
 
-let layerRoute = function (app) {
-
-  //根据权限组groupId，返回该权限组拥有的所有图层
+let layerRoute = function(app) {
+  // 根据权限组groupId，返回该权限组拥有的所有图层
   app.post('/layersForGroup', (req, res) => {
-
     co(function* () {
-
-
       let group = yield Group.find({
         where: {
           id: {
-            [Op.eq]: req.body.groupId
-          }
-        }
-      })
+            [Op.eq]: req.body.groupId,
+          },
+        },
+      });
 
-      let layersForGroup = []
+      let layersForGroup = [];
 
       let fathers = yield group.getBaseMapLayers({
         where: {
           ParentId: {
-            [Op.eq]: 0
-          }
-        }
+            [Op.eq]: 0,
+          },
+        },
       });
 
       let sons = yield group.getBaseMapLayers({
         where: {
           ParentId: {
-            [Op.not]: 0
-          }
-        }
-      })
-
-      let sons0 = []
-
-
-      sons.forEach(element => {
-        sons0.push(element.get({ plain: true }))
+            [Op.not]: 0,
+          },
+        },
       });
 
-      let groupFields = yield group.getBaseLayerFields()
+      let sons0 = [];
 
 
+      sons.forEach((element) => {
+        sons0.push(element.get({plain: true}));
+      });
+
+      let groupFields = yield group.getBaseLayerFields();
 
 
-      fathers.forEach(father => {
+      fathers.forEach((father) => {
         let item = {
           father: {},
-          sons: []
-        }
-        item.father = father
-        sons0.forEach(son => {
-          son.fields = []
-          groupFields.forEach(element => {
-
+          sons: [],
+        };
+        item.father = father;
+        sons0.forEach((son) => {
+          son.fields = [];
+          groupFields.forEach((element) => {
             if (element.BaseMapLayerId == son.id) {
-              son.fields.push(element)
-
+              son.fields.push(element);
             }
           });
 
           if (son.ParentId == father.id) {
-            item.sons.push(son)
+            item.sons.push(son);
           }
         });
-        layersForGroup.push(item)
+        layersForGroup.push(item);
       });
 
-      res.send(layersForGroup)
-    }).catch(function (e) {
+      res.send(layersForGroup);
+    }).catch(function(e) {
       console.log(e);
     });
+  });
 
-  })
 
-
-  //获取所有要素图层
+  // 获取所有要素图层
   app.get('/featureLayers', (req, res) => {
-
     co(function* () {
       let featureLayers = yield BaseMapLayer.findAll({
         where: {
           LayerType: {
-            [Op.eq]: 'FeatureLayer'
-          }
-        }
-      })
+            [Op.eq]: 'FeatureLayer',
+          },
+        },
+      });
 
-      res.send(featureLayers)
-    }).catch(function (e) {
+      res.send(featureLayers);
+    }).catch(function(e) {
       console.log(e);
     });
-  })
+  });
 
 
-
-
-
-
-  //获取树状的所有图层，用于生成服务管理页面的服务目录
+  // 获取树状的所有图层，用于生成服务管理页面的服务目录
   app.post('/layersForTree', (req, res) => {
-
-
     co(function* () {
       let layersForTree = [];
       let fathers = yield BaseMapLayer.findAll({
         where: {
           ParentId: {
-            [Op.eq]: 0
-          }
-        }
+            [Op.eq]: 0,
+          },
+        },
       });
       let sons = yield BaseMapLayer.findAll({
         where: {
           ParentId: {
-            [Op.not]: 0
-          }
-        }
-      })
-
-      fathers.forEach(father => {
-        let item = {
-          father: {},
-          sons: []
-        }
-        item.father = father
-        sons.forEach(son => {
-          if (son.ParentId == father.id) {
-            item.sons.push(son)
-          }
-        });
-        layersForTree.push(item)
+            [Op.not]: 0,
+          },
+        },
       });
 
-      res.send(layersForTree)
+      fathers.forEach((father) => {
+        let item = {
+          father: {},
+          sons: [],
+        };
+        item.father = father;
+        sons.forEach((son) => {
+          if (son.ParentId == father.id) {
+            item.sons.push(son);
+          }
+        });
+        layersForTree.push(item);
+      });
 
-    }).catch(function (e) {
+      res.send(layersForTree);
+    }).catch(function(e) {
       console.log(e);
     });
+  });
 
-  })
-
-  //根据id获取一个图层
-  app.get('/oneLayer', function (req, res) {
+  // 根据id获取一个图层
+  app.get('/oneLayer', function(req, res) {
     co(function* () {
       let oneLayer = yield BaseMapLayer.find({
         where: {
           id: {
-            [Op.eq]: req.query.layerId
-          }
-        }
-      })
+            [Op.eq]: req.query.layerId,
+          },
+        },
+      });
 
-      res.send(oneLayer)
-    }).catch(function (e) {
+      res.send(oneLayer);
+    }).catch(function(e) {
       console.log(e);
     });
-
-  })
+  });
 
   app.post('/addLayer', (req, res) => {
-
-    req.body.forEach(e => {
-      BaseMapLayer.create(e)
-    })
-
-  })
+    req.body.forEach((e) => {
+      BaseMapLayer.create(e);
+    });
+  });
 
 
-  //修改图层属性
+  // 修改图层属性
   app.post('/updateLayer', (req, res) => {
-
-    let change = {}
-    change[req.body.name] = req.body.value
+    let change = {};
+    change[req.body.name] = req.body.value;
 
     if (req.body.name == 'LayerType') {
       switch (change[req.body.name]) {
@@ -206,22 +184,18 @@ let layerRoute = function (app) {
       let oneLayer = yield BaseMapLayer.update(change, {
         where: {
           id: {
-            [Op.eq]: req.body.pk
-          }
-        }
-      })
+            [Op.eq]: req.body.pk,
+          },
+        },
+      });
 
 
-      res.send(oneLayer)
-    }).catch(function (e) {
+      res.send(oneLayer);
+    }).catch(function(e) {
       console.log(e);
-      res.send(['err'])
+      res.send(['err']);
     });
+  });
+};
 
-  })
-
-
-
-}
-
-module.exports.layerRoute = layerRoute
+module.exports.layerRoute = layerRoute;

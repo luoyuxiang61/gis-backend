@@ -1,9 +1,9 @@
-const Sequelize = require('sequelize')
+const Sequelize = require('sequelize');
 module.exports = {
     UserName: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
     },
     Password: {
-        type: Sequelize.STRING
-    }
-}
+        type: Sequelize.STRING,
+    },
+};

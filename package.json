@@ -16,5 +16,9 @@
     "express": "^4.16.2",
     "sequelize": "^4.28.0",
     "tedious": "^2.1.5"
+  },
+  "devDependencies": {
+    "eslint": "^4.16.0",
+    "eslint-config-google": "^0.9.1"
   }
 }
