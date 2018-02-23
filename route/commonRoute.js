@@ -34,18 +34,6 @@ let commonRoute = function (app) {
   });
 
 
-  // 新建用户
-  app.post('/register', (req, res) => {
-    let user = {};
-    user.UserName = req.body.userName;
-    user.Password = req.body.password;
-
-    let grp = Group.findById(req.body.grpId)
-    grp.then(x => {
-      x.createUser(user).then(x => res.send(x)).catch(e => res.send('err'))
-    }).catch(e => res.send('err'))
-  });
-
 
   // 增加书签
   app.post('/addBookmark', (req, res) => {
