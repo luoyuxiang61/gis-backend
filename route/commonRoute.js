@@ -4,9 +4,9 @@ const Bookmark = require('../resource/resource').bookmark;
 const Op = require('sequelize').Op;
 const co = require('co');
 
-let commonRoute = function(app) {
+let commonRoute = function (app) {
   // 对所有的请求开启跨域访问
-  app.all('*', function(req, res, next) {
+  app.all('*', function (req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');
     next();
   });
@@ -28,7 +28,7 @@ let commonRoute = function(app) {
       });
 
       res.send(JSON.stringify(user));
-    }).catch(function(e) {
+    }).catch(function (e) {
       console.log(e);
     });
   });
@@ -40,8 +40,10 @@ let commonRoute = function(app) {
     user.UserName = req.body.userName;
     user.Password = req.body.password;
 
-    User.create(user);
-    res.send('ok');
+    let grp = Group.findById(req.body.grpId)
+    grp.then(x => {
+      x.createUser(user).then(x => res.send(x)).catch(e => res.send('err'))
+    }).catch(e => res.send('err'))
   });
 
 
@@ -68,7 +70,7 @@ let commonRoute = function(app) {
       let bookmark = yield user.createBookmark(mark);
 
       res.send(bookmark);
-    }).catch(function(e) {
+    }).catch(function (e) {
       console.log(e);
     });
   });
@@ -87,7 +89,7 @@ let commonRoute = function(app) {
       let bookmarks = yield user.getBookmarks();
 
       res.send(bookmarks);
-    }).catch(function(e) {
+    }).catch(function (e) {
       console.log(e);
     });
   });
@@ -113,7 +115,7 @@ let commonRoute = function(app) {
 
       user.removeBookmark(bookmark);
       res.send('ok');
-    }).catch(function(e) {
+    }).catch(function (e) {
       console.log(e);
     });
   });
@@ -130,12 +132,12 @@ let commonRoute = function(app) {
         },
       });
 
-      let change = {name: req.body.newName};
+      let change = { name: req.body.newName };
 
       yield bookmark.update(change);
 
       res.send('ok');
-    }).catch(function(e) {
+    }).catch(function (e) {
       console.log(e);
     });
   });
