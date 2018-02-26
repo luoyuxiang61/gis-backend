@@ -70,7 +70,7 @@ let quanxianRoute = function (app) {
 
     //修改用户
     app.post('/editUser', (req, res) => {
-        User.findById(req.body.userId).then(user => user.update(req.body.change).then(x => res.send(x)).catch(e => res.send('err'))).catch(e => res.send('err'))
+        User.findById(req.body.userId).then(user => user.update(JSON.parse(req.body.change)).then(x => res.send(x)).catch(e => res.send('err'))).catch(e => res.send('err'))
     })
 
 
