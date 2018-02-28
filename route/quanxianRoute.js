@@ -35,9 +35,21 @@ let quanxianRoute = function (app) {
 
     //添加权限组
     app.post('/addGroup', (req, res) => {
-        let depa = Department.findById(req.body.depaId)
+        let grp = JSON.parse(req.body.newGrp)
+        let depa = Department.findById(grp.nDepaId)
         depa.then(x => {
-            x.createGroup({ name: req.body.grpName }).then(x => res.send(x)).catch(e => res.send('err'))
+            console.log('depa', x)
+            x.createGroup({ name: grp.name }).then(grp0 => {
+                BaseMapLayer.findAll({
+                    where: {
+                        id: {
+                            [Op.in]: grp.nLayers
+                        }
+                    }
+                }).then(x => {
+                    grp0.setBaseMapLayers(x).then(x => res.send(x))
+                }).catch(e => res.send('err'))
+            }).catch(e => res.send('err'))
         }).catch(e => res.send('err'))
     })
 

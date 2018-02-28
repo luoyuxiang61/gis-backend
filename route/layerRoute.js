@@ -3,7 +3,7 @@ const Group = require('../resource/resource').group;
 const Op = require('sequelize').Op;
 const co = require('co');
 
-let layerRoute = function(app) {
+let layerRoute = function (app) {
   // 根据权限组groupId，返回该权限组拥有的所有图层
   app.post('/layersForGroup', (req, res) => {
     co(function* () {
@@ -32,12 +32,13 @@ let layerRoute = function(app) {
           },
         },
       });
+      console.log(sons)
 
       let sons0 = [];
 
 
       sons.forEach((element) => {
-        sons0.push(element.get({plain: true}));
+        sons0.push(element.get({ plain: true }));
       });
 
       let groupFields = yield group.getBaseLayerFields();
@@ -65,7 +66,7 @@ let layerRoute = function(app) {
       });
 
       res.send(layersForGroup);
-    }).catch(function(e) {
+    }).catch(function (e) {
       console.log(e);
     });
   });
@@ -83,7 +84,7 @@ let layerRoute = function(app) {
       });
 
       res.send(featureLayers);
-    }).catch(function(e) {
+    }).catch(function (e) {
       console.log(e);
     });
   });
@@ -123,13 +124,13 @@ let layerRoute = function(app) {
       });
 
       res.send(layersForTree);
-    }).catch(function(e) {
+    }).catch(function (e) {
       console.log(e);
     });
   });
 
   // 根据id获取一个图层
-  app.get('/oneLayer', function(req, res) {
+  app.get('/oneLayer', function (req, res) {
     co(function* () {
       let oneLayer = yield BaseMapLayer.find({
         where: {
@@ -140,7 +141,7 @@ let layerRoute = function(app) {
       });
 
       res.send(oneLayer);
-    }).catch(function(e) {
+    }).catch(function (e) {
       console.log(e);
     });
   });
@@ -189,7 +190,7 @@ let layerRoute = function(app) {
 
 
       res.send(oneLayer);
-    }).catch(function(e) {
+    }).catch(function (e) {
       console.log(e);
       res.send(['err']);
     });
