@@ -64,7 +64,16 @@ let quanxianRoute = function (app) {
 
     //删除权限组
     app.post('/deleteGroup', (req, res) => {
-        Group.findById(req.body.grpId).then(grp => grp.destroy().then(x => res.send(x)).catch(e => res.send('err'))).catch(e => res.send('err'))
+        Group.findById(req.body.grpId).then(grp => {
+            grp.destroy().then(res.send('ok')).catch(e => res.send('err'))
+            grp.getUsers().then(users => {
+                if (users.length >= 1) {
+                    for (let u of users) {
+                        u.destroy()
+                    }
+                }
+            })
+        })
     })
 
     //修改权限组
