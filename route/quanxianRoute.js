@@ -33,6 +33,14 @@ let quanxianRoute = function (app) {
         });
     });
 
+
+    // 获取一个部门的所有权限组
+    app.post('/grpsInDepa', (req, res) => {
+        Department.findById(req.body.depaId).then(depa => {
+            depa.getGroups().then(grps => res.send(grps)).catch(e => res.send('err'))
+        }).catch(e => res.send('err'))
+    })
+
     //添加权限组
     app.post('/addGroup', (req, res) => {
         let grp = JSON.parse(req.body.newGrp)
@@ -47,7 +55,8 @@ let quanxianRoute = function (app) {
                         }
                     }
                 }).then(x => {
-                    grp0.setBaseMapLayers(x).then(x => res.send(x))
+                    grp0.setBaseMapLayers(x).then(x => res.send('ok'))
+                        .catch(e => res.send('err'))
                 }).catch(e => res.send('err'))
             }).catch(e => res.send('err'))
         }).catch(e => res.send('err'))
