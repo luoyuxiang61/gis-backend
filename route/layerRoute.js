@@ -32,7 +32,7 @@ let layerRoute = function (app) {
           },
         },
       });
-      console.log(sons)
+
 
       let sons0 = [];
 

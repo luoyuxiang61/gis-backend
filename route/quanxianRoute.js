@@ -77,8 +77,21 @@ let quanxianRoute = function (app) {
     })
 
     //修改权限组
-    app.post('/editGroup', (req, res) => {
-        Group.findById(req.body.grpId).then(grp => grp.update(req.body.change).then(x => res.send(x)).catch(e => res.send('err'))).catch(e => res.send('err'))
+    app.post('/updateGroup', (req, res) => {
+        let changedGrp = JSON.parse(req.body.newGrp)
+        Group.findById(changedGrp.id).then(grp => {
+            grp.update({ name: changedGrp.name }).then(grp0 => {
+                BaseMapLayer.findAll({
+                    where: {
+                        id: {
+                            [Op.in]: changedGrp.nLayers
+                        }
+                    }
+                }).then(layers => {
+                    grp0.setBaseMapLayers(layers).then(() => res.send('ok')).catch(e => res.send('err'))
+                })
+            })
+        })
     })
 
     //添加用户
