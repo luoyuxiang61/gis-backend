@@ -1,3 +1,4 @@
+const Fun = require('../resource/resource').fun
 const BaseMapLayer = require('../resource/resource').baseMapLayer;
 const BaseLayerField = require('../resource/resource').baseLayerField;
 const Group = require('../resource/resource').group;
@@ -79,19 +80,24 @@ let quanxianRoute = function (app) {
     //修改权限组
     app.post('/updateGroup', (req, res) => {
         let changedGrp = JSON.parse(req.body.newGrp)
-        Group.findById(changedGrp.id).then(grp => {
-            grp.update({ name: changedGrp.name }).then(grp0 => {
-                BaseMapLayer.findAll({
-                    where: {
-                        id: {
-                            [Op.in]: changedGrp.nLayers
-                        }
-                    }
-                }).then(layers => {
-                    grp0.setBaseMapLayers(layers).then(() => res.send('ok')).catch(e => res.send('err'))
-                })
-            })
-        })
+        async function updateGroup(changedGrp) {
+            let [grp, layers, fields, funs] = await Promise.all([
+                Group.findById(changedGrp.id),
+                BaseMapLayer.findAll({ where: { id: { [Op.in]: changedGrp.nLayers } } }),
+                BaseLayerField.findAll({ where: { id: { [Op.in]: changedGrp.nFields } } }),
+                Fun.findAll({ where: { id: { [Op.in]: changedGrp.nFunctions } } })
+            ])
+
+            await Promise.all([
+                grp.update({ name: changedGrp.name }),
+                grp.setBaseMapLayers(layers),
+                grp.setBaseLayerFields(fields),
+                grp.setFun(funs)
+            ])
+            return await Promise.resolve('ok')
+        }
+
+        updateGroup(changedGrp).then(x => res.send(x))
     })
 
     //添加用户

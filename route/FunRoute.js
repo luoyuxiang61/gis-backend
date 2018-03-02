@@ -12,6 +12,16 @@ let funRoute = (app) => {
         Fun.findAll().then(x => res.send(x))
     })
 
+    app.post('/funsForGroup', (req, res) => {
+        Fun.findAll({
+            where: {
+                id: {
+                    [Op.in]: req.body.grpId
+                }
+            }
+        }).then(funs => res.send(funs))
+    })
+
 }
 
 module.exports.funRoute = funRoute
