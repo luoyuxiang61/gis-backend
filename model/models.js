@@ -5,5 +5,7 @@ models.bookmark = require('./Bookmark');
 models.department = require('./Department');
 models.group = require('./Group');
 models.user = require('./User');
+models.fun = require('./Fun')
+
 
 module.exports = models;

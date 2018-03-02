@@ -1,3 +1,4 @@
+const funRoute = require('./route/FunRoute').funRoute;
 const layerRoute = require('./route/layerRoute').layerRoute;
 const commonRoute = require('./route/commonRoute').commonRoute;
 const fieldRoute = require('./route/fieldRoute').fieldRoute;
@@ -8,7 +9,7 @@ const sequelize = require('./resource/resource').sequelize;
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
-const urlencodedParser = bodyParser.urlencoded({extended: false});
+const urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 
 sequelize
@@ -30,6 +31,7 @@ layerRoute(app);
 fieldRoute(app);
 otherRoute(app);
 quanxianRoute(app);
+funRoute(app);
 
 
 app.listen(3000);

@@ -5,6 +5,7 @@ let {
   department,
   group,
   user,
+  fun
 } = require('../model/models');
 
 let {
@@ -30,6 +31,8 @@ const sequelize = new Sequelize(dbName, dbUsername, dbPassword, {
 });
 
 
+let Fun = sequelize.define('Fun', fun);
+
 let BaseMapLayer = sequelize.define('BaseMapLayer', baseMapLayer);
 let BaseLayerField = sequelize.define('BaseLayerField', baseLayerField);
 
@@ -38,6 +41,8 @@ let Group = sequelize.define('Group', group);
 let LayerGroup = sequelize.define('LayerGroup');
 
 let FieldGroup = sequelize.define('FieldGroup');
+
+let FunGroup = sequelize.define('FunGroup')
 
 let User = sequelize.define('User', user);
 
@@ -61,6 +66,14 @@ Group.belongsToMany(BaseLayerField, {
   through: FieldGroup,
 });
 
+Fun.belongsToMany(Group, {
+  through: FunGroup
+})
+
+Group.belongsToMany(Fun, {
+  through: FunGroup
+})
+
 
 Department.hasMany(Group);
 Group.belongsTo(Department);
@@ -78,7 +91,7 @@ User.hasMany(Bookmark);
 Bookmark.belongsTo(User);
 
 // sequelize.sync({
-//   force: true
+//   force: false
 // })
 
 
@@ -88,4 +101,5 @@ module.exports.group = Group;
 module.exports.user = User;
 module.exports.bookmark = Bookmark;
 module.exports.department = Department;
+module.exports.fun = Fun
 module.exports.sequelize = sequelize;
