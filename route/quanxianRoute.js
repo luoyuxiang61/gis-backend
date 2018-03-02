@@ -100,6 +100,31 @@ let quanxianRoute = function (app) {
         updateGroup(changedGrp).then(x => res.send(x))
     })
 
+
+    //获取一个权限组拥有的图层、字段、功能
+    app.post('/quanxianForGroup', (req, res) => {
+        async function quanxianForGroup(grpId) {
+
+            let grp = await Group.findById(req.body.grpId)
+
+            let [layers, fields, functions] = await Promise.all([
+                grp.getBaseMapLayers(),
+                grp.getBaseLayerFields(),
+                grp.getFun()
+            ])
+
+            return JSON.stringify({ layers, fields, functions })
+        }
+
+        quanxianForGroup(req.body.grpId).then(x => res.send(x))
+
+
+
+    })
+
+
+
+
     //添加用户
     app.post('/addUser', (req, res) => {
         let user = {};
