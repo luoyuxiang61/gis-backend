@@ -44,23 +44,27 @@ let quanxianRoute = function (app) {
 
     //添加权限组
     app.post('/addGroup', (req, res) => {
-        let grp = JSON.parse(req.body.newGrp)
-        let depa = Department.findById(grp.nDepaId)
-        depa.then(x => {
-            console.log('depa', x)
-            x.createGroup({ name: grp.name }).then(grp0 => {
-                BaseMapLayer.findAll({
-                    where: {
-                        id: {
-                            [Op.in]: grp.nLayers
-                        }
-                    }
-                }).then(x => {
-                    grp0.setBaseMapLayers(x).then(x => res.send('ok'))
-                        .catch(e => res.send('err'))
-                }).catch(e => res.send('err'))
-            }).catch(e => res.send('err'))
-        }).catch(e => res.send('err'))
+        async function addGroup(grp) {
+            let [depa, layers, fields, funs] = await Promise.all([
+                Department.findById(grp.nDepaId),
+                BaseMapLayer.findAll({ where: { id: { [Op.in]: grp.nLayers } } }),
+                BaseLayerField.findAll({ where: { id: { [Op.in]: grp.nFields } } }),
+                Fun.findAll({ where: { id: { [Op.in]: grp.nFunctions } } })
+            ])
+
+            let grp0 = await depa.createGroup({ name: grp.name })
+
+            await Promise.all([
+                grp0.setBaseLayerFields(fields),
+                grp0.setBaseMapLayers(layers),
+                grp0.setFun(funs)
+            ])
+
+            return 'ok'
+        }
+
+        addGroup(JSON.parse(req.body.newGrp)).then(x => res.send(x)).catch(e => res.send(e.toString()))
+
     })
 
     //删除权限组
