@@ -2,6 +2,7 @@ const BaseMapLayer = require('../resource/resource').baseMapLayer;
 const Group = require('../resource/resource').group;
 const Op = require('sequelize').Op;
 const co = require('co');
+const EventEmitter = require('events').EventEmitter
 
 let layerRoute = function (app) {
   // 根据权限组groupId，返回该权限组拥有的所有图层
@@ -62,6 +63,13 @@ let layerRoute = function (app) {
             item.sons.push(son);
           }
         });
+        item.sons.sort((a, b) => {
+          if (a.SortCode < b.SortCode) {
+            return -1
+          } else {
+            return 1
+          }
+        })
         layersForGroup.push(item);
       });
 
@@ -129,6 +137,23 @@ let layerRoute = function (app) {
     });
   });
 
+
+  // 根据图层组ID获取所有子图层
+  app.get('/layersInLyrGrp', (req, res) => {
+    BaseMapLayer.findAll({
+      where: {
+        ParentId: {
+          [Op.eq]: req.query.lyrGrpId
+        }
+      },
+      order: [
+        ['SortCode', 'ASC']
+      ]
+    }).then(x => {
+      res.send(x)
+    }).catch(e => res.send(e.toString()))
+  })
+
   // 根据id获取一个图层
   app.get('/oneLayer', function (req, res) {
     co(function* () {
@@ -151,6 +176,26 @@ let layerRoute = function (app) {
       BaseMapLayer.create(e);
     });
   });
+
+
+  //改变子图层的顺序
+  app.post('/changeSort', (req, res) => {
+    let emit = new EventEmitter()
+    emit.once('over', () => console.log('over!!!'))
+
+    let sort = JSON.parse(req.body.sort)
+    sort.forEach((s, index) => {
+      BaseMapLayer.update({ SortCode: index + 1000 }, {
+        where: {
+          id: {
+            [Op.eq]: s
+          }
+        }
+      })
+    })
+
+    res.send('ok')
+  })
 
 
   // 修改图层属性
