@@ -5,7 +5,8 @@ let {
   department,
   group,
   user,
-  fun
+  fun,
+  device
 } = require('../model/models');
 
 let {
@@ -50,6 +51,9 @@ let Bookmark = sequelize.define('Bookmark', bookmark);
 
 let Department = sequelize.define('Department', department);
 
+let Device = sequelize.define('Device', device);
+let UserDevice = sequelize.define('UserDevice');
+
 
 BaseMapLayer.belongsToMany(Group, {
   through: LayerGroup,
@@ -75,6 +79,15 @@ Group.belongsToMany(Fun, {
 })
 
 
+User.belongsToMany(Device, {
+  through: UserDevice
+})
+
+Device.belongsToMany(User, {
+  through: UserDevice
+})
+
+
 Department.hasMany(Group);
 Group.belongsTo(Department);
 
@@ -90,9 +103,14 @@ BaseLayerField.belongsTo(BaseMapLayer);
 User.hasMany(Bookmark);
 Bookmark.belongsTo(User);
 
-// sequelize.sync({
-//   force: false
-// })
+
+
+
+
+
+sequelize.sync({
+  force: false
+})
 
 
 module.exports.baseMapLayer = BaseMapLayer;

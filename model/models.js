@@ -6,6 +6,6 @@ models.department = require('./Department');
 models.group = require('./Group');
 models.user = require('./User');
 models.fun = require('./Fun')
-
+models.device = require('./Device')
 
 module.exports = models;
