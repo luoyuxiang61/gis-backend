@@ -10,7 +10,7 @@ module.exports = {
         type: Sequelize.STRING
     },
     os: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER
     },
     osVersion: {
         type: Sequelize.STRING

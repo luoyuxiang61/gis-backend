@@ -5,11 +5,23 @@ const EventEmitter = require('events').EventEmitter
 
 let deviceRoute = (app) => {
 
-    app.get('/allDevices', (req, res) => {
-        Device.findAll({
-            include: [User]
-        }).then(devices => res.send(devices))
+    app.post('/allDevices', (req, res) => {
 
+        let { os, type } = req.body
+
+        if (os) {
+            Device.findAll({
+                where: {
+                    deviceType: type,
+                    os: os
+                },
+                include: [User]
+            }).then(devices => res.send(devices))
+        } else {
+            Device.findAll({
+                include: [User]
+            }).then(devices => res.send(devices))
+        }
     })
 
 
@@ -32,15 +44,7 @@ let deviceRoute = (app) => {
 
         console.log(req.body.newDevice)
 
-        Device.create({
-            uuid: 'advcjnhklwcjkwhdlciasdc',
-            deviceType: 0,
-            model: 'NOKIA 6',
-            os: 'Android',
-            osVersion: '8.0.1',
-            online: 1,
-            offline: 0
-        }).then(v => res.send(v))
+        Device.create(req.body.newDevice).then(v => res.send(v))
             .catch(e => res.send(e.toString()))
     })
 
