@@ -4,6 +4,7 @@ const commonRoute = require('./route/commonRoute').commonRoute;
 const fieldRoute = require('./route/fieldRoute').fieldRoute;
 const otherRoute = require('./route/otherRoute').resourceRoute;
 const quanxianRoute = require('./route/quanxianRoute').quanxianRoute;
+const deviceRoute = require('./route/deviceRoute').deviceRoute
 const sequelize = require('./resource/resource').sequelize;
 
 const express = require('express');
@@ -32,6 +33,7 @@ fieldRoute(app);
 otherRoute(app);
 quanxianRoute(app);
 funRoute(app);
+deviceRoute(app);
 
 
 app.listen(3000);

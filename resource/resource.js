@@ -108,9 +108,9 @@ Bookmark.belongsTo(User);
 
 
 
-sequelize.sync({
-  force: false
-})
+// sequelize.sync({
+//   force: false
+// })
 
 
 module.exports.baseMapLayer = BaseMapLayer;
@@ -120,4 +120,5 @@ module.exports.user = User;
 module.exports.bookmark = Bookmark;
 module.exports.department = Department;
 module.exports.fun = Fun
+module.exports.device = Device
 module.exports.sequelize = sequelize;
