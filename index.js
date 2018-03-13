@@ -1,10 +1,11 @@
-const funRoute = require('./route/FunRoute').funRoute;
 const layerRoute = require('./route/layerRoute').layerRoute;
-const commonRoute = require('./route/commonRoute').commonRoute;
+const commonRouter = require('./route/commonRouter').commonRouter;
+const bookmarkRouter = require('./route/bookmarkRouter').bookmarkRouter
+const functionRouter = require('./route/functionRouter').functionRouter
 const fieldRoute = require('./route/fieldRoute').fieldRoute;
-const otherRoute = require('./route/otherRoute').resourceRoute;
-const quanxianRoute = require('./route/quanxianRoute').quanxianRoute;
-const deviceRoute = require('./route/deviceRoute').deviceRoute
+const otherRouter = require('./route/otherRouter').otherRouter;
+const quanxianRouter = require('./route/quanxianRouter').quanxianRouter;
+const deviceRouter = require('./route/deviceRouter').deviceRouter
 const sequelize = require('./resource/resource').sequelize;
 
 const express = require('express');
@@ -24,16 +25,27 @@ sequelize
 
 app.use(urlencodedParser);
 app.use(bodyParser.json());
+
+// 静态资源
 app.use(express.static(__dirname + '/static'));
 
+// 开启跨域
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  next();
+})
 
-commonRoute(app);
-layerRoute(app);
+app.use(commonRouter)
+app.use(bookmarkRouter)
+app.use(functionRouter)
+app.use(quanxianRouter)
+app.use(otherRouter)
+app.use(deviceRouter)
+app.use(layerRoute)
+
+
 fieldRoute(app);
-otherRoute(app);
-quanxianRoute(app);
-funRoute(app);
-deviceRoute(app);
+
 
 
 app.listen(3000);

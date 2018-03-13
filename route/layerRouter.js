@@ -2,17 +2,11 @@ const BaseMapLayer = require('../resource/resource').baseMapLayer;
 const Group = require('../resource/resource').group;
 const Op = require('sequelize').Op;
 const express = require('express');
-let layerRouter = express.Router({caseSensitive: true});
-layerRouter.use((req, res, next) => {
-    // console.log(req.body, res, 'layerRouter start!!!');
-    console.log('layerRouter hit!!!');
-    next();
-});
-
+let layerRouter = express.Router({ caseSensitive: true });
 
 // 根据groupId获取该权限组拥有的所有图层
-layerRouter.get('/layersForGroup/:groupId', (req, res) => {
-    let fun = async function(groupId) {
+layerRouter.post('/layersForGroup', (req, res) => {
+    let fun = async function (groupId) {
         let grp = await Group.findById(groupId);
         let layers = await grp.getBaseMapLayers();
         let fathers = layers.filter((element) => element.ParentId === 0);
@@ -26,7 +20,7 @@ layerRouter.get('/layersForGroup/:groupId', (req, res) => {
         return layersForGroup;
     };
 
-    fun(req.params.groupId).then((value) => res.send(JSON.stringify(value)))
+    fun(req.body.groupId).then((value) => res.send(JSON.stringify(value)))
         .catch((err) => res.send(err.toString()));
 });
 
@@ -46,7 +40,7 @@ layerRouter.get('/featureLayers', (req, res) => {
 
 // 获取所有图层(树状图）
 layerRouter.get('/layersForTree', (req, res) => {
-    let fun = async function() {
+    let fun = async function () {
         let lyrs = await BaseMapLayer.findAll();
         let fathers = lyrs.filter((element) => element.ParentId === 0);
         let layersForTree = [];
@@ -89,7 +83,7 @@ layerRouter.delete('/:id', (req, res) => {
 
 // 根据id和要修改的内容,修改一个图层
 layerRouter.put('/:id', (req, res) => {
-    let fun = async function() {
+    let fun = async function () {
         let toChange = await BaseMapLayer.findById(req.params.id);
         return await toChange.update(req.body);
     };
