@@ -1,8 +1,8 @@
-const layerRoute = require('./route/layerRoute').layerRoute;
+const layerRouter = require('./route/layerRouter').layerRouter;
 const commonRouter = require('./route/commonRouter').commonRouter;
 const bookmarkRouter = require('./route/bookmarkRouter').bookmarkRouter
 const functionRouter = require('./route/functionRouter').functionRouter
-const fieldRoute = require('./route/fieldRoute').fieldRoute;
+const fieldRouter = require('./route/fieldRouter').fieldRouter;
 const otherRouter = require('./route/otherRouter').otherRouter;
 const quanxianRouter = require('./route/quanxianRouter').quanxianRouter;
 const deviceRouter = require('./route/deviceRouter').deviceRouter
@@ -41,10 +41,8 @@ app.use(functionRouter)
 app.use(quanxianRouter)
 app.use(otherRouter)
 app.use(deviceRouter)
-app.use(layerRoute)
-
-
-fieldRoute(app);
+app.use(layerRouter)
+app.use(fieldRouter)
 
 
 
