@@ -181,6 +181,23 @@ let quanxianRoute = function (app) {
         }).catch(e => res.send('err'))
     })
 
+    //删除一个部门
+    app.post('/deleteDepa', (req, res) => {
+        Department.findById(req.body.depaId).then(depa => depa.destroy().then(x => res.send('ok')))
+    })
+
+    // 添加一个部门
+    app.post('/addDepa', (req, res) => {
+        Department.create({ name: req.body.depaName }).then(x => res.send('ok'))
+    })
+
+    // 修改一个部门
+    app.post('/editDepa', (req, res) => {
+        Department.findById(req.body.depaId).then(depa => {
+            depa.update({ name: req.body.depaName }).then(x => res.send('ok'))
+        })
+    })
+
 };
 
 
