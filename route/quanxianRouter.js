@@ -13,7 +13,7 @@ const express = require('express')
 let quanxianRouter = express.Router()
 
 
-quanxianRouter.get('/departmentsForTree', (req, res) => {
+quanxianRouter.get('/departments', (req, res) => {
     async function departmentsForTree() {
         let departmentsForTree = []
         let depas = await Department.findAll()
@@ -25,20 +25,20 @@ quanxianRouter.get('/departmentsForTree', (req, res) => {
         }
         return departmentsForTree
     }
-
     departmentsForTree().then(x => res.send(x)).catch(e => res.send('err' + e))
 });
 
 
+
+
 // 获取一个部门的所有权限组
-quanxianRouter.post('/grpsInDepa', (req, res) => {
-    Department.findById(req.body.depaId).then(depa => {
-        depa.getGroups().then(grps => res.send(grps)).catch(e => res.send('err'))
-    }).catch(e => res.send('err'))
+quanxianRouter.get('/groups', (req, res) => {
+    Department.findById(req.query.depaId).then(x => x.getGroups()).then(x => res.send(x)).catch(e => res.send('err' + e))
 })
 
+
 //添加权限组
-quanxianRouter.post('/addGroup', (req, res) => {
+quanxianRouter.post('/groups', (req, res) => {
     async function addGroup(grp) {
         let [depa, layers, fields, funs] = await Promise.all([
             Department.findById(grp.nDepaId),
@@ -46,25 +46,22 @@ quanxianRouter.post('/addGroup', (req, res) => {
             BaseLayerField.findAll({ where: { id: { [Op.in]: grp.nFields } } }),
             Fun.findAll({ where: { id: { [Op.in]: grp.nFunctions } } })
         ])
-
-        let grp0 = await depa.createGroup({ name: grp.name })
-
+        let g = await depa.createGroup({ name: grp.name })
         await Promise.all([
-            grp0.setBaseLayerFields(fields),
-            grp0.setBaseMapLayers(layers),
-            grp0.setFun(funs)
+            g.setBaseLayerFields(fields),
+            g.setBaseMapLayers(layers),
+            g.setFun(funs)
         ])
-
         return 'ok'
     }
-
     addGroup(JSON.parse(req.body.newGrp)).then(x => res.send(x)).catch(e => res.send('err' + e))
-
 })
 
+
+
 //删除权限组
-quanxianRouter.post('/deleteGroup', (req, res) => {
-    Group.findById(req.body.grpId).then(grp => {
+quanxianRouter.delete('/groups/:id', (req, res) => {
+    Group.findById(req.params.id).then(grp => {
         grp.destroy().then(x => res.send('ok')).catch(e => res.send('err' + e))
         grp.getUsers().then(users => {
             if (users.length >= 1) {
@@ -76,12 +73,14 @@ quanxianRouter.post('/deleteGroup', (req, res) => {
     })
 })
 
+
+
 //修改权限组
-quanxianRouter.post('/updateGroup', (req, res) => {
+quanxianRouter.put('/groups/:id', (req, res) => {
     let changedGrp = JSON.parse(req.body.newGrp)
-    async function updateGroup(changedGrp) {
+    async function updateGroup(changedGrp, grpId) {
         let [grp, layers, fields, funs] = await Promise.all([
-            Group.findById(changedGrp.id),
+            Group.findById(grpId),
             BaseMapLayer.findAll({ where: { id: { [Op.in]: changedGrp.nLayers } } }),
             BaseLayerField.findAll({ where: { id: { [Op.in]: changedGrp.nFields } } }),
             Fun.findAll({ where: { id: { [Op.in]: changedGrp.nFunctions } } })
@@ -96,14 +95,14 @@ quanxianRouter.post('/updateGroup', (req, res) => {
         return await Promise.resolve('ok')
     }
 
-    updateGroup(changedGrp).then(x => res.send('ok')).catch(e => res.send('err' + e))
+    updateGroup(changedGrp, req.params.id).then(x => res.send(x)).catch(e => res.send('err' + e))
 })
 
 
 //获取一个权限组拥有的图层、字段、功能
-quanxianRouter.post('/quanxianForGroup', (req, res) => {
+quanxianRouter.get('/', (req, res) => {
     async function quanxianForGroup(grpId) {
-        let grp = await Group.findById(req.body.grpId)
+        let grp = await Group.findById(grpId)
         let [layers, fields, functions] = await Promise.all([
             grp.getBaseMapLayers(),
             grp.getBaseLayerFields(),
@@ -112,78 +111,72 @@ quanxianRouter.post('/quanxianForGroup', (req, res) => {
         return JSON.stringify({ layers, fields, functions })
     }
 
-    quanxianForGroup(req.body.grpId).then(x => res.send(x)).catch(e => res.send('err' + e))
+    quanxianForGroup(req.query.grpId).then(x => res.send(x)).catch(e => res.send('err' + e))
 })
 
 
 
 
 //添加用户
-quanxianRouter.post('/addUser', (req, res) => {
+quanxianRouter.post('/users', (req, res) => {
     let user = {};
     user.UserName = req.body.userName;
     user.Password = req.body.password;
 
-    Group.findById(req.body.grpId).then(x => {
-        x.createUser(user).then(x => res.send('ok')).catch(e => res.send('err' + e))
-    })
+    Group.findById(req.body.grpId).then(x => x.createUser(user)).then(x => res.send('ok')).catch(e => res.send('err' + e))
 });
 
 //删除用户
-quanxianRouter.post('/deleteUser', (req, res) => {
-    User.findById(req.body.userId).then(user => user.destroy().then(x => res.send('ok')).catch(e => res.send('err' + e)))
+quanxianRouter.delete('/users/:id', (req, res) => {
+    User.findById(req.params.id).then(x => x.destroy()).then(x => res.send('ok')).catch(e => res.send('err' + e))
 })
 
 //修改用户
-quanxianRouter.post('/editUser', (req, res) => {
-    User.findById(req.body.userId).then(user => user.update(JSON.parse(req.body.change)).then(x => res.send('ok')).catch(e => res.send('err' + e)))
+quanxianRouter.put('/users/:id', (req, res) => {
+    User.findById(req.params.id).then(x => x.update(JSON.stringify(req.body.change))).then(x => res.send('ok')).catch(e => res.send('err' + e))
 })
 
 
-//获取一个部门的所有用户
-quanxianRouter.post('/usersInDepa', (req, res) => {
-    let usersInDepa = []
-
-    Department.findById(req.body.depaId).then(x => {
-        x.getGroups().then(grps => {
-            let grpIds = []
-            grps.forEach(grp => grpIds.push(grp.id))
-
-            User.findAll({
+//获取一个部门或权限组的所有用户
+quanxianRouter.get('/users', (req, res) => {
+    if (req.query.depaId !== undefined) {
+        let usersInDepa = []
+        Department.findById(req.query.depaId)
+            .then(x => x.getGroups())
+            .then(x => User.findAll({
                 where: {
                     GroupId: {
-                        [Op.in]: grpIds
+                        [Op.in]: x.map(x => x.id)
                     }
                 }
-            }).then(users => res.send(users))
-                .catch(e => res.send('err'))
-        }).catch(e => res.send('err'))
-    }).catch(e => res.send('err'))
+            }))
+            .then(x => res.send(x))
+    }
+    else if (req.query.groupId !== undefined) {
+        Group.findById(req.query.groupId).then(x => x.getUsers()).then(x => res.send(x))
+    }
+    else {
+        User.findAll().then(x => res.send(x))
+    }
 })
 
-
-//获取一个权限组的所有用户
-quanxianRouter.post('/usersInGroup', (req, res) => {
-    Group.findById(req.body.grpId).then(grp => {
-        grp.getUsers().then(users => res.send(users)).catch(e => res.send('err'))
-    }).catch(e => res.send('err'))
-})
 
 //删除一个部门
-quanxianRouter.post('/deleteDepa', (req, res) => {
-    Department.findById(req.body.depaId).then(depa => depa.destroy().then(x => res.send('ok')).catch(e => res.send('err' + e)))
+quanxianRouter.delete('/departments/:id', (req, res) => {
+    Department.findById(req.params.id).then(x => x.destroy()).then(x => res.send('ok')).catch(e => res.send('err' + e))
 })
 
 // 添加一个部门
-quanxianRouter.post('/addDepa', (req, res) => {
+quanxianRouter.post('/departments', (req, res) => {
     Department.create({ name: req.body.depaName }).then(x => res.send('ok')).catch(e => res.send('err' + e))
 })
 
 // 修改一个部门
-quanxianRouter.post('/editDepa', (req, res) => {
-    Department.findById(req.body.depaId).then(depa => {
-        depa.update({ name: req.body.depaName }).then(x => res.send('ok')).catch(e => res.send('err' + e))
-    })
+quanxianRouter.put('/departments/:id', (req, res) => {
+    Department.findById(req.params.id)
+        .then(x => x.update({ name: req.body.depaName }))
+        .then(x => res.send('ok'))
+        .catch(e => res.send('err' + e))
 })
 
 

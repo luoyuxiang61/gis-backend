@@ -36,10 +36,10 @@ app.use((req, res, next) => {
   next();
 })
 
-app.use(commonRouter)
+app.use('/common', commonRouter)
 app.use('/bookmarks', bookmarkRouter)
 app.use('/functions', functionRouter)
-app.use(quanxianRouter)
+app.use('/quanxian', quanxianRouter)
 app.use(otherRouter)
 app.use('/devices', deviceRouter)
 app.use('/layers', layerRouter)
