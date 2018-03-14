@@ -5,12 +5,12 @@ const express = require('express')
 let functionRouter = express.Router()
 
 // 添加功能
-functionRouter.post('/addFun', (req, res) => {
+functionRouter.post('/', (req, res) => {
     Fun.create({ name: req.body.funName }).then((x) => res.send('ok')).catch(e => res.send('err' + e))
 })
 
 // 所有功能
-functionRouter.get('/allFunctions', (req, res) => {
+functionRouter.get('/', (req, res) => {
     Fun.findAll().then(x => res.send(x)).catch(e => res.send('err' + e))
 })
 

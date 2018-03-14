@@ -32,12 +32,13 @@ app.use(express.static(__dirname + '/static'));
 // 开启跨域
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
   next();
 })
 
 app.use(commonRouter)
-app.use(bookmarkRouter)
-app.use(functionRouter)
+app.use('/bookmarks', bookmarkRouter)
+app.use('/functions', functionRouter)
 app.use(quanxianRouter)
 app.use(otherRouter)
 app.use('/devices', deviceRouter)
