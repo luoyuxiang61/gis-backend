@@ -8,12 +8,26 @@ const express = require('express')
 let layerRouter = express.Router()
 
 
-// 根据权限组groupId，返回该权限组拥有的所有图层，以及在相应图层拥有的字段
-layerRouter.post('/layersForGroup', (req, res) => {
+// 根据条件获取图层
+layerRouter.get('/', (req, res) => {
 
-  async function layersForGroup() {
+  if (req.query.groupId) {
+    layersForGroup(req.query.groupId).then(x => res.send(x)).catch(e => res.send('err' + e))
+  }
+  else if (req.query.type) {
+    getLayersByType(req.query.type).then(x => res.send(x)).catch(e => res.send('err' + e))
+  }
+  else if (req.query.id) {
+    getLayerById(req.query.id).then(x => res.send(x))
+  }
+  else {
+    layersForTree().then(x => res.send(x)).catch(e => res.send('err' + e))
+  }
+
+
+  async function layersForGroup(groupId) {
     let layersForGroup = []
-    let grp = await Group.findById(req.body.groupId)
+    let grp = await Group.findById(groupId)
     let [fathers, fields] = await Promise.all([
       grp.getBaseMapLayers({
         where: {
@@ -47,24 +61,18 @@ layerRouter.post('/layersForGroup', (req, res) => {
     return layersForGroup
   }
 
-  layersForGroup().then(x => res.send(x)).catch(e => res.send('err' + e))
-});
+  function getLayersByType(layerType) {
+    return BaseMapLayer.findAll({
+      where: {
+        LayerType: layerType
+      }
+    })
+  }
 
+  function getLayerById(id) {
+    return BaseMapLayer.findById(id)
+  }
 
-// 获取所有要素图层
-layerRouter.get('/featureLayers', (req, res) => {
-  BaseMapLayer.findAll({
-    where: {
-      LayerType: 'FeatureLayer'
-    }
-  }).then(x => res.send(x))
-    .catch(e => res.send('err' + e))
-});
-
-
-
-// 获取树状的所有图层，用于生成服务管理页面的服务目录
-layerRouter.get('/layersForTree', (req, res) => {
   async function layersForTree() {
     let layersForTree = []
     let [fathers, sons] = await Promise.all([
@@ -86,42 +94,29 @@ layerRouter.get('/layersForTree', (req, res) => {
     return layersForTree
   }
 
-  layersForTree().then(x => res.send(x)).catch(e => res.send('err' + e))
+
 });
 
 
-// 根据图层组ID获取所有子图层
-layerRouter.get('/layersInLyrGrp', (req, res) => {
+// 根据图层组ID获取它的子图层
+layerRouter.get('/:id/sons', (req, res) => {
   BaseMapLayer.findAll({
     where: {
-      ParentId: req.query.lyrGrpId
+      ParentId: req.params.id
     },
     order: [
       ['SortCode', 'ASC']
     ]
-  }).then(x => {
-    res.send(x)
-  }).catch(e => res.send('err' + e))
+  }).then(x => res.send(x))
+    .catch(e => res.send('err' + e))
 })
 
 
-// 根据id获取一个图层
-layerRouter.get('/oneLayer', function (req, res) {
-  BaseMapLayer.findById(req.query.layerId).then(x => res.send(x)).catch(e => res.send('err' + e))
-});
 
-
-// 测试用：初始化所有图层
-layerRouter.post('/addLayer', (req, res) => {
-  req.body.forEach((e) => {
-    BaseMapLayer.create(e);
-  });
-});
 
 
 //改变子图层的顺序
-layerRouter.post('/changeSort', (req, res) => {
-
+layerRouter.post('/sort', (req, res) => {
   let sort = JSON.parse(req.body.sort)
   sort.forEach((s, index) => {
     BaseMapLayer.update({ SortCode: index + 1000 }, {
@@ -135,7 +130,7 @@ layerRouter.post('/changeSort', (req, res) => {
 
 
 // 修改图层属性
-layerRouter.post('/updateLayer', (req, res) => {
+layerRouter.post('/update', (req, res) => {
   let change = {};
   change[req.body.name] = req.body.value;
 
@@ -159,8 +154,18 @@ layerRouter.post('/updateLayer', (req, res) => {
     }
   }
 
-  BaseMapLayer.findById(req.body.pk).then(x => x.update(change).then((x) => res.send(x)).catch(e => res.send('err')))
+  BaseMapLayer.findById(req.body.pk)
+    .then(x => x.update(change))
+    .then(x => res.send(x))
     .catch(e => res.send('err'))
+});
+
+
+// 测试用：初始化所有图层
+layerRouter.post('/', (req, res) => {
+  req.body.forEach((e) => {
+    BaseMapLayer.create(e);
+  });
 });
 
 

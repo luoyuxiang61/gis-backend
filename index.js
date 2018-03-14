@@ -41,7 +41,7 @@ app.use(functionRouter)
 app.use(quanxianRouter)
 app.use(otherRouter)
 app.use('/devices', deviceRouter)
-app.use(layerRouter)
+app.use('/layers', layerRouter)
 app.use('/fields', fieldRouter)
 
 
