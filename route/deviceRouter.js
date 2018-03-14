@@ -6,9 +6,9 @@ const express = require('express')
 let deviceRouter = express.Router()
 
 
-deviceRouter.post('/allDevices', (req, res) => {
-    let { os, type } = req.body
-    if (os) {
+deviceRouter.get('/', (req, res) => {
+    let { os, type } = req.query
+    if (os !== 'undefined') {
         Device.findAll({
             where: {
                 deviceType: type,
@@ -24,21 +24,25 @@ deviceRouter.post('/allDevices', (req, res) => {
 })
 
 
-deviceRouter.post('/bindUser', (req, res) => {
+deviceRouter.post('/:id/users/', (req, res) => {
     async function bindUser() {
-        let [user, device] = await Promise.all([User.findById(req.body.userId), Device.findById(req.body.deviceId)])
-        device.addUser(user)
-        res.send(JSON.stringify({ user, device }))
+        let [user, device] = await Promise.all([User.findById(req.body.userId), Device.findById(req.params.id)])
+        await device.addUser(user)
+        return 'ok'
     }
-
-    bindUser()
+    bindUser().then(x => res.send(x)).catch(e => res.send('err' + e))
 })
 
-deviceRouter.post('/changeDevice', (req, res) => {
-    res.send(req.body.change)
+
+deviceRouter.put('/:id', (req, res) => {
+    Device.update(req.body.change, {
+        where: {
+            id: req.params.id
+        }
+    }).then(x => res.send('ok'))
 })
 
-deviceRouter.post('/addDevice', (req, res) => {
+deviceRouter.post('/', (req, res) => {
     Device.create(req.body.newDevice).then(v => res.send('ok'))
         .catch(e => res.send('err' + e))
 })

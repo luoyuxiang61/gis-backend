@@ -40,9 +40,9 @@ app.use(bookmarkRouter)
 app.use(functionRouter)
 app.use(quanxianRouter)
 app.use(otherRouter)
-app.use(deviceRouter)
+app.use('/devices', deviceRouter)
 app.use(layerRouter)
-app.use(fieldRouter)
+app.use('/fields', fieldRouter)
 
 
 
