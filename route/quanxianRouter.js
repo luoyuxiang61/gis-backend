@@ -111,7 +111,7 @@ quanxianRouter.get('/', (req, res) => {
         return JSON.stringify({ layers, fields, functions })
     }
 
-    quanxianForGroup(req.query.grpId).then(x => res.send(x)).catch(e => res.send('err' + e))
+    quanxianForGroup(req.query.groupId).then(x => res.send(x)).catch(e => res.send('err' + e))
 })
 
 
@@ -133,7 +133,7 @@ quanxianRouter.delete('/users/:id', (req, res) => {
 
 //修改用户
 quanxianRouter.put('/users/:id', (req, res) => {
-    User.findById(req.params.id).then(x => x.update(JSON.stringify(req.body.change))).then(x => res.send('ok')).catch(e => res.send('err' + e))
+    User.findById(req.params.id).then(x => x.update(JSON.parse(req.body.change))).then(x => res.send('ok')).catch(e => res.send('err' + e))
 })
 
 
@@ -148,12 +148,13 @@ quanxianRouter.get('/users', (req, res) => {
                     GroupId: {
                         [Op.in]: x.map(x => x.id)
                     }
-                }
+                },
+                include: [Group]
             }))
             .then(x => res.send(x))
     }
     else if (req.query.groupId !== undefined) {
-        Group.findById(req.query.groupId).then(x => x.getUsers()).then(x => res.send(x))
+        Group.findById(req.query.groupId).then(x => x.getUsers({ include: [Group] })).then(x => res.send(x))
     }
     else {
         User.findAll().then(x => res.send(x))
