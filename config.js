@@ -3,5 +3,7 @@ module.exports = {
     dbPort: 1433,
     dbName: 'Fabu',
     dbUsername: 'sa',
-    dbPassword: '123@abcd'
+    dbPassword: '123@abcd',
+
+    secret: "askjdjksdahk&%&^$&ghasd"
 };
