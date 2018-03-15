@@ -45,6 +45,9 @@ app.use((req, res, next) => {
 // 登录/授权
 app.use('/auth', authRouter)
 
+app.use(otherRouter)
+
+
 
 //验证token
 app.use(function (req, res, next) {
@@ -71,7 +74,8 @@ app.use('/quanxian', quanxianRouter)
 app.use('/devices', deviceRouter)
 app.use('/layers', layerRouter)
 app.use('/fields', fieldRouter)
-app.use(otherRouter)
+
+
 
 
 
